@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <vector>
+#include <thread>
+#include <chrono>
 
 #include "Die.h"
 
@@ -27,6 +29,11 @@ public:
 	{
 		std::cout << message << std::endl;
 	}	
+
+	static void WaitFor(const float seconds)
+	{
+		std::this_thread::sleep_for(std::chrono::duration<float>(seconds));
+	}
 };
 
 using GameDice = std::array<Die, Rules::DICE>;

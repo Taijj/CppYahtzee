@@ -11,46 +11,55 @@
 class Round
 {
 public:
-	Round(GameDice& dice, Renderer& renderer) : _renderer(renderer), _dice(dice)
+	Round(GameDice& dice, Renderer& renderer) : _renderer(renderer), _dice(dice), _isRunning(true)
 	{}
 
 	~Round() = default;
 
-	bool Execute()
+	void Execute()
 	{		
 		for (Die d : _dice)
 			d.Unlock();			
-		
-		bool isCanceled;
-		isCanceled = ExecuteRollingPhase();
-		isCanceled = ExecuteScoringPhase();
-		return false;
+
+		while (true)
+		{
+			Roll();
+			_renderer.Render();
+
+			Evaluate(Input::Get());
+			
+			Utils::WaitFor(1.0f);
+			if (!_isRunning)
+				break;
+		}
+	}
+
+	bool IsRunning()
+	{
+		return _isRunning;
 	}
 
 private:	
 	Renderer& _renderer;
 	GameDice& _dice;
-
-
+	bool _isRunning;
 	
-
-	bool ExecuteRollingPhase()
+	void Evaluate(const Command command)
 	{
-		for (std::uint32_t i = 0; i < Rules::REROLLS; ++i)
-		{
-			Roll();			
-			_renderer.Render();
+		if (command == Input::EXIT)
+			ExitGame();
+		if (command == Input::ROLL)
+			Roll();
+		if (command == Input::LOCK)
+			LockDice(command.subData);
+		if (command == Input::SCORE)
+			Score(command.subData);
+	}	
 
-			const Command com = Input::Get();
-			Utils::Log("Command identified: " + std::string(1, com.character) + " - " + com.description);
-			Utils::Log("SubData: " + com.subData);
-		}
-
-		return false;
-	}		
-	
 	void Roll()
 	{
+		Utils::Log("Rolling dice...");
+
 		for(Die& d : _dice)
 		{
 			if (!d.IsLocked())
@@ -59,15 +68,21 @@ private:
 		_renderer.UpdateDice();
 	}	
 
-	void LockDice(std::string &input)
+	void LockDice(const std::string &input)
 	{
-		Utils::Log("TODO: Locking!");
+		Utils::Log("TODO//");
+		Utils::Log("Separating Dice...");
 	}
 
-
-	bool ExecuteScoringPhase()
+	void Score(const std::string &input)
 	{
-		Utils::Log("TODO: Scoring!");
-		return false;
+		Utils::Log("TODO//");
+		Utils::Log("Ending turn...");
+	}
+
+	void ExitGame()
+	{
+		Utils::Log("Exiting...");
+		_isRunning = false;
 	}
 };

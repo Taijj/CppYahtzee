@@ -6,6 +6,7 @@
 #include <map>
 
 #include "Utils.h"
+#include "Input.h"
 
 using DieColumn = std::vector<std::string>;
 
@@ -25,6 +26,7 @@ public:
 		std::cout << CLEAR;
 		RenderRound();
 		RenderDice();
+		RenderInput();
 	}
 		
 	~Renderer() = default;
@@ -54,25 +56,11 @@ public:
 		}
 	}	
 
-	void UpdateCommands()
-	{
-		//TODO
-	}
-
-
 
 private:
 	inline static const char* CLEAR = "\033[2J\033[1;1H";	
 	inline static const char* ROLL_HEADLINE = "Player threw the dice...";
 	inline static constexpr std::uint32_t COLUMN_LENGTH = Rules::DICE + 1; // All Dice + a Headline
-
-	/*inline static const std::map<char, std::string> INPUTS =
-	{
-		{Input::REROLL, Input::REROLL + " - Reroll all dice"},
-		{Input::LOCK, Input::LOCK + " - Select dice to lock"},
-		{Input::COUNT, Input::COUNT + " - Finish round to count score"},
-		{Input::EXIT, Input::EXIT + " - Cancel and exit game"},
-	};*/
 
 	std::string _roundText;
 
@@ -99,5 +87,25 @@ private:
 			std::cout << hand << '\t' << lock << std::endl;
 		}
 		std::cout << std::endl;
+	}
+
+	void RenderInput() const
+	{
+		std::cout << "# Use the following commands to play:" << std::endl;
+		std::cout << Input::ROLL.character << " - " << Input::ROLL.description << "\t\t";
+		std::cout << Input::LOCK.character << " - " << Input::LOCK.description << std::endl;
+		std::cout << Input::EXIT.character << " - " << Input::EXIT.description << "\t\t";
+		std::cout << Input::SCORE.character << " - " << Input::SCORE.description << std::endl;		
+		
+		std::cout << std::endl;
+		for(auto s : Input::LOCK_TUTORIAL)
+			std::cout << s << std::endl;
+
+		std::cout << std::endl;
+		for (auto s : Input::SCORE_TUTORIAL)
+			std::cout << s << std::endl;
+		
+		std::cout << std::endl;
+		std::cout << "# Your Input: ";
 	}
 };

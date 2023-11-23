@@ -22,8 +22,8 @@ int main()
         {
             renderer.UpdateRound(currentRound+1);
 
-            bool isCanceled = round.Execute();
-            if (!isCanceled)
+            round.Execute();
+            if(round.IsRunning())
                 ++currentRound;
             else
                 break;

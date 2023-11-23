@@ -6,29 +6,50 @@
 
 #include "Utils.h"
 
+using Tutorial = std::vector<std::string>;
+
 class Command
 {
 public: 
 	const char character;
 	const std::string description;
-	const std::vector<std::string> subCommands;
+	const std::vector<std::string> subCommands;	
 
 	std::string subData;
 	bool isAvailable;
+
+	bool operator==(const Command& other)
+	{
+		return other.character == character;
+	}
 };
 
 class Input
 {
 public:
-	inline static Command ROLL = { 'r', "Roll all unlocked dice.", {} };
+	inline static Command ROLL = { 'r', "Roll (remaining) dice.", {} };
 	inline static Command EXIT = { 'x', "Cancel and exit game.", {} };
 
-	inline static Command LOCK = { 'l', "Lock selected dice for later scoring.",
+	inline static Command LOCK = { 'l', "Select dice for later scoring and re-roll remaining dice.",
 	{ "1", "2", "3", "4", "5"} };
 	inline static Command SCORE = { 'e', "End turn and score.",
 	{ "ac", "tw", "th", "fo", "fi", "si", "3p", "4p", "fu", "ss", "sl", "ya", "ch"} };
 
-	inline static std::string CLEAR_LINE = "\x1B[1A\x1B[2K";
+	inline static const std::string CLEAR_LINE = "\x1B[1A\x1B[2K";
+		
+	inline static const auto LOCK_TUTORIAL = Tutorial {
+		"# When selecting dice add numbers after the command to select the dice by id!",
+		"Example: 'l125' will select the dices 1, 2, and 5."
+	};
+		
+	inline static const auto SCORE_TUTORIAL = Tutorial{
+		"# When scoring, select how you want to score by adding one of the following after the command:",		
+		" ac - Aces\t\t tw - Twos\t\t th - Threes\t",
+		" fo - Fours\t\t fi - Fives\t\t si - Sixes\t",
+		" 3p - 3 of a Kind\t 4p - 4 of a Kind\t fu - Full House\t",
+		" ss - Small Straight\t sl - Large Straight\t ya - Yahtzee\t",
+		" ch - Chance"
+	};
 
 
 
