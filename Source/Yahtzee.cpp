@@ -2,9 +2,9 @@
 #include <format>
 #include <exception>
 
-#include "Utils.h"
-#include "Round.h"
-#include "Renderer.h"
+#include "../Headers/Utils.h"
+#include "../Headers/Round.h"
+#include "../Headers/Renderer.h"
 
 int main()
 {
