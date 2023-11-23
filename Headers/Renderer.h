@@ -3,6 +3,7 @@
 #include <format>
 #include <iostream>
 #include <vector>
+#include <map>
 
 #include "Utils.h"
 
@@ -18,8 +19,17 @@ public:
 		_diceHand(DieColumn(COLUMN_LENGTH)),
 		_diceLocked(DieColumn(COLUMN_LENGTH))
 	{}
+
+	void Render() const
+	{
+		std::cout << CLEAR;
+		RenderRound();
+		RenderDice();
+	}
 		
 	~Renderer() = default;
+
+
 
 	void UpdateRound(std::uint32_t value)
 	{			
@@ -42,14 +52,12 @@ public:
 			else
 				_diceHand.push_back(entry);
 		}
-	}
-
-	void Render()
-	{
-		std::cout << CLEAR;
-		RenderRound();
-		RenderDice();		
 	}	
+
+	void UpdateCommands()
+	{
+		//TODO
+	}
 
 
 
@@ -57,6 +65,14 @@ private:
 	inline static const char* CLEAR = "\033[2J\033[1;1H";	
 	inline static const char* ROLL_HEADLINE = "Player threw the dice...";
 	inline static constexpr std::uint32_t COLUMN_LENGTH = Rules::DICE + 1; // All Dice + a Headline
+
+	/*inline static const std::map<char, std::string> INPUTS =
+	{
+		{Input::REROLL, Input::REROLL + " - Reroll all dice"},
+		{Input::LOCK, Input::LOCK + " - Select dice to lock"},
+		{Input::COUNT, Input::COUNT + " - Finish round to count score"},
+		{Input::EXIT, Input::EXIT + " - Cancel and exit game"},
+	};*/
 
 	std::string _roundText;
 
@@ -66,13 +82,13 @@ private:
 
 
 
-	void RenderRound()
+	void RenderRound() const
 	{
 		std::cout << _roundText << std::endl;
 		std::cout << std::endl;
 	}
 
-	void RenderDice()
+	void RenderDice() const
 	{
 		std::cout << ROLL_HEADLINE << std::endl;
 		std::cout << std::endl;

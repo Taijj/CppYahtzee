@@ -38,6 +38,9 @@
     <ClInclude Include="Headers\Combination.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\Input.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Other\Task.md">

@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="Headers\Combination.h" />
     <ClInclude Include="Headers\Die.h" />
+    <ClInclude Include="Headers\Input.h" />
     <ClInclude Include="Headers\Player.h" />
     <ClInclude Include="Headers\Renderer.h" />
     <ClInclude Include="Headers\Round.h" />

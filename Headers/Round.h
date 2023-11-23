@@ -6,6 +6,7 @@
 #include <exception>
 #include "Utils.h"
 #include "Renderer.h"
+#include "Input.h"
 
 class Round
 {
@@ -37,23 +38,12 @@ private:
 	{
 		for (std::uint32_t i = 0; i < Rules::REROLLS; ++i)
 		{
-			Roll();
-			
+			Roll();			
 			_renderer.Render();
-			continue;
 
-			std::string input = Input::Get("r - reroll; l### - lock; c - count; x - exit");
-			char command = input[0];
-
-			switch (command)
-			{
-				case Input::LOCK: LockDice(input); break;
-				case Input::COUNT: i = Rules::REROLLS; break;
-				case Input::EXIT: return true;
-				case Input::REROLL: break;
-
-				default: throw std::invalid_argument("Unknown Command detected!");
-			}
+			const Command com = Input::Get();
+			Utils::Log("Command identified: " + std::string(1, com.character) + " - " + com.description);
+			Utils::Log("SubData: " + com.subData);
 		}
 
 		return false;
