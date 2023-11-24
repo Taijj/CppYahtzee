@@ -32,12 +32,13 @@ public:
 
 
 
-	void RenderHead() const;
+	void RenderRound() const;
 	void RenderDice() const;
 	void RenderFirstThrow() const;
 
 	void RenderRoundInputs() const;
 	void RenderLockInputs() const;
+	void RenderExitConfirmation() const;
 	static void RenderInvalid();
 
 

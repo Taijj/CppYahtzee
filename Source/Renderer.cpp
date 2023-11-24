@@ -31,7 +31,7 @@ void Renderer::UpdateDice(const std::uint32_t rerollsLeft)
 
 
 
-void Renderer::RenderHead() const
+void Renderer::RenderRound() const
 {
 	std::cout << CLEAR;
 
@@ -53,10 +53,11 @@ void Renderer::RenderDice() const
 }
 
 void Renderer::RenderFirstThrow() const
-{
-	std::cout << "# Use the following command to start your turn:" << std::endl;
+{	
 	std::cout << INDENT << Input::THROW.character << " - " << Input::THROW.description << std::endl;
+	std::cout << INDENT << Input::EXIT.character << " - " << Input::EXIT.description << std::endl;
 
+	std::cout << std::endl;
 	std::cout << YOUR_INPUT;
 }
 
@@ -65,7 +66,7 @@ void Renderer::RenderFirstThrow() const
 void Renderer::RenderRoundInputs() const
 {
 	std::cout << "# Use the following commands to play:" << std::endl;
-	std::cout << INDENT << Input::THROW.character << " - " << Input::THROW.description << "\t\t";
+	std::cout << INDENT << Input::THROW.character << " - " << Input::THROW.description << "\t\t\t";
 	std::cout << INDENT << Input::LOCK.character << " - " << Input::LOCK.description << std::endl;
 	std::cout << INDENT << Input::EXIT.character << " - " << Input::EXIT.description << "\t\t";
 	std::cout << INDENT << Input::SCORE.character << " - " << Input::SCORE.description << std::endl;
@@ -85,6 +86,16 @@ void Renderer::RenderLockInputs() const
 	std::cout << Input::EXIT.character << " - " << Input::EXIT.description << "\t";
 	std::cout << Input::SCORE.character << " - " << Input::SCORE.description << std::endl;
 
+	std::cout << std::endl;
+	std::cout << YOUR_INPUT;
+}
+
+void Renderer::RenderExitConfirmation() const
+{
+	std::cout << CLEAR;
+
+	std::cout << "\n\n";
+	std::cout << "Really Exit? (y/n)" << std::endl;
 	std::cout << std::endl;
 	std::cout << YOUR_INPUT;
 }

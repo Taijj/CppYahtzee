@@ -58,6 +58,30 @@ const Command* Input::GetLock(std::string& result)
 	}
 }
 
+bool Input::IsExitConfirmed()
+{
+	std::string input;
+	while (true)
+	{
+		std::cin >> input;
+		
+		if (input.size() != 1)
+		{
+			Renderer::RenderInvalid();			
+			continue;
+		}
+
+		const char first = input[0];
+		if (first != 'y' && first != 'n')
+		{
+			Renderer::RenderInvalid();
+			continue;
+		}
+
+		return first == 'y';
+	}
+}
+
 
 
 const Command* Input::TryGetCommand(const std::string& input)

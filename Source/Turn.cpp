@@ -8,31 +8,46 @@ void Turn::Execute()
 {
 	for (Die d : _dice)
 		d.Set(Die::Default);
+	_rerollCount = Rules::REROLLS;
 
-	while (_rerollCount == 0)
+	// First Throw
+	while (true)
 	{
-		_renderer.RenderHead();
+		_renderer.RenderRound();
 		_renderer.RenderFirstThrow();
 
 		const Command com = Input::GetDefault();
-	}
+		if (com == Input::THROW)
+		{
+			Roll();
+			break;
+		}
 
-	_rerollCount = 0;
-	while (IsCompleted() == false)
-	{
-		_renderer.RenderHead();
-		_renderer.RenderRoundInputs();
-		Evaluate(Input::GetDefault());
+		if (com == Input::EXIT)
+			ExitGame();
 
-		Utils::WaitFor(1.0f);
 		if (_isExited)
 			return;
 	}
+
+	// Main Loop
+	while (IsCompleted() == false)
+	{
+		_renderer.RenderRound();
+		_renderer.RenderRoundInputs();
+		Evaluate(Input::GetDefault());
+		
+		if (_isExited)
+			return;
+	}	
+
+	// Scoring
+	Score();
 }
 
 bool Turn::IsCompleted()
 {
-	return _rerollCount >= Rules::REROLLS
+	return _rerollCount <= 0
 		|| std::all_of(_dice.begin(), _dice.end(), [](const Die& d) { return d.Is(Die::Locked); });
 }
 
@@ -48,8 +63,7 @@ void Turn::Evaluate(const Command command)
 {
 	if (command == Input::THROW)
 	{
-		// Rerolls happen automatically in Execute()
-		Utils::Log("Throwing dice...");
+		Roll();
 	}
 	else if (command == Input::EXIT)
 	{
@@ -61,26 +75,30 @@ void Turn::Evaluate(const Command command)
 	}
 	else if (command == Input::SCORE)
 	{
-		Score();
+		// Naturally progress to scoring
+		_rerollCount = 0;
 	}
 }
 
 void Turn::Roll()
 {
-	++_rerollCount;
 	for (Die& d : _dice)
 	{
 		if (!d.Is(Die::Locked))
 			d.Roll();
 	}
-	_renderer.UpdateDice(Rules::REROLLS - _rerollCount);
+	--_rerollCount;
+	_renderer.UpdateDice(_rerollCount);
 }
 
 void Turn::ExitGame()
 {
-	// TODO: Really Exit? y/n
-	Utils::Log("Exiting...");
+	_renderer.RenderExitConfirmation();
+	if (false == Input::IsExitConfirmed())
+		return;
+	
 	_isExited = true;
+	Utils::Log("\nExiting...\n\n");
 }
 
 
@@ -90,7 +108,7 @@ void Turn::LockDice()
 	const Command* com;
 	while (true)
 	{
-		_renderer.RenderHead();
+		_renderer.RenderRound();
 		_renderer.RenderLockInputs();
 
 		std::string subCommands = "";
@@ -123,11 +141,14 @@ void Turn::LockDice()
 	Evaluate(*com);
 }
 
+
+
 void Turn::Score()
 {
-	_renderer.RenderHead();
+	_renderer.RenderRound();
 	_rerollCount = Rules::REROLLS;
 
 	Utils::Log("TODO//");
 	Utils::Log("Ending turn...");
+	Utils::WaitFor(2.0f);
 }

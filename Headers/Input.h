@@ -21,10 +21,10 @@ class Input
 {
 
 public:
-	inline static Command THROW = { 't', "Throw (remaining) dice."};
+	inline static Command THROW = { 't', "Throw dice."};
 	inline static Command EXIT = { 'x', "Cancel and exit game."};
 	inline static Command LOCK = { 'l', "Select dice for later scoring." };
-	inline static Command SCORE = { 's', "End turn and start scoring." };
+	inline static Command SCORE = { 's', "End turn and start scoring." };	
 
 	inline static const std::string LOCK_COMMANDS = "12345";
 	inline static const ScoreCommands SCORE_COMMANDS =
@@ -67,6 +67,8 @@ public:
 
 	static const Command GetDefault();
 	static const Command* GetLock(std::string& result);
+
+	static bool IsExitConfirmed();
 
 private:
 
