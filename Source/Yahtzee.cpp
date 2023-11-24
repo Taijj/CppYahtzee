@@ -23,9 +23,10 @@ int main()
             renderer.UpdateRound(currentRound+1);
 
             round.Execute();
-            if(round.IsRunning())
+            
+            if(round.IsCompleted())
                 ++currentRound;
-            else
+            else if(round.IsExited())
                 break;
         }
         catch (std::exception e)

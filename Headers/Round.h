@@ -11,78 +11,104 @@
 class Round
 {
 public:
-	Round(GameDice& dice, Renderer& renderer) : _renderer(renderer), _dice(dice), _isRunning(true)
+	Round(GameDice& dice, Renderer& renderer)
+		: _renderer(renderer), _dice(dice), _rerollCount(0), _isExited(false)
 	{}
 
 	~Round() = default;
+
+
 
 	void Execute()
 	{		
 		for (Die d : _dice)
 			d.Unlock();			
 
-		while (true)
+		_rerollCount = 0;
+		while (IsCompleted() == false)
 		{
 			Roll();
 			_renderer.Render();
 
-			Evaluate(Input::Get());
+			Evaluate(Input::GetRound());
 			
 			Utils::WaitFor(1.0f);
-			if (!_isRunning)
-				break;
+			if (_isExited)
+				return;
 		}
 	}
 
-	bool IsRunning()
+	bool IsCompleted()
 	{
-		return _isRunning;
+		return _rerollCount >= Rules::REROLLS
+			|| std::all_of(_dice.begin(), _dice.end(), [](const Die& d) { return d.IsLocked(); });
 	}
+
+	bool IsExited()
+	{
+		return _isExited;
+	}
+
+
 
 private:	
 	Renderer& _renderer;
 	GameDice& _dice;
-	bool _isRunning;
+
+	std::uint32_t _rerollCount;
+	bool _isExited;
 	
+
+
 	void Evaluate(const Command command)
 	{
-		if (command == Input::EXIT)
-			ExitGame();
-		if (command == Input::ROLL)
-			Roll();
-		if (command == Input::LOCK)
-			LockDice(command.subData);
-		if (command == Input::SCORE)
-			Score(command.subData);
+		if (command == Input::THROW)
+		{
+			// Rerolls happen automatically in Execute()
+			Utils::Log("Throwing dice...");
+		}
+		else if(command == Input::EXIT)
+		{
+			ExitGame();			
+		}
+		else if (command == Input::LOCK)
+		{
+			LockDice();
+		}
+		else if (command == Input::SCORE)
+		{
+			Score();
+		}
 	}	
 
 	void Roll()
 	{
-		Utils::Log("Rolling dice...");
-
+		++_rerollCount;
 		for(Die& d : _dice)
 		{
 			if (!d.IsLocked())
 				d.Roll();
 		}
-		_renderer.UpdateDice();
-	}	
-
-	void LockDice(const std::string &input)
-	{
-		Utils::Log("TODO//");
-		Utils::Log("Separating Dice...");
-	}
-
-	void Score(const std::string &input)
-	{
-		Utils::Log("TODO//");
-		Utils::Log("Ending turn...");
-	}
+		_renderer.UpdateDice(Rules::REROLLS - _rerollCount);
+	}		
 
 	void ExitGame()
 	{
 		Utils::Log("Exiting...");
-		_isRunning = false;
+		_isExited = true;
 	}
+
+
+
+	void LockDice()
+	{		
+		Utils::Log("TODO//");
+		Utils::Log("Locking...");
+	}
+
+	void Score()
+	{
+		Utils::Log("TODO//");
+		Utils::Log("Ending turn...");
+	}	
 };

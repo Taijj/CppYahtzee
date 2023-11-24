@@ -18,7 +18,9 @@ public:
 	Renderer(GameDice& dice) :
 		_dice{dice},
 		_diceHand(DieColumn(COLUMN_LENGTH)),
-		_diceLocked(DieColumn(COLUMN_LENGTH))
+		_diceLocked(DieColumn(COLUMN_LENGTH)),
+		_roundText(""),
+		_rerollsLeft(0)
 	{}
 
 	void Render() const
@@ -38,8 +40,10 @@ public:
 		_roundText = std::format("========= Round {} =========", value);
 	}
 
-	void UpdateDice()
+	void UpdateDice(const std::uint32_t rerollsLeft)
 	{		
+		_rerollsLeft = rerollsLeft;
+
 		_diceHand.clear();
 		_diceLocked.clear();
 
@@ -62,11 +66,12 @@ private:
 	inline static const char* ROLL_HEADLINE = "Player threw the dice...";
 	inline static constexpr std::uint32_t COLUMN_LENGTH = Rules::DICE + 1; // All Dice + a Headline
 
-	std::string _roundText;
-
 	const GameDice& _dice;
 	DieColumn _diceHand;
 	DieColumn _diceLocked;
+
+	std::string _roundText;
+	std::uint32_t _rerollsLeft;
 
 
 
@@ -85,27 +90,28 @@ private:
 			const std::string hand = i < _diceHand.size() ? _diceHand[i] : "";
 			const std::string lock = i < _diceLocked.size() ? _diceLocked[i] : "";
 			std::cout << hand << '\t' << lock << std::endl;
-		}
+		}		
 		std::cout << std::endl;
 	}
 
 	void RenderInput() const
 	{
 		std::cout << "# Use the following commands to play:" << std::endl;
-		std::cout << Input::ROLL.character << " - " << Input::ROLL.description << "\t\t";
+		std::cout << Input::THROW.character << " - " << Input::THROW.description << "\t\t";
 		std::cout << Input::LOCK.character << " - " << Input::LOCK.description << std::endl;
 		std::cout << Input::EXIT.character << " - " << Input::EXIT.description << "\t\t";
 		std::cout << Input::SCORE.character << " - " << Input::SCORE.description << std::endl;		
 		
-		std::cout << std::endl;
+		/*std::cout << std::endl;
 		for(auto s : Input::LOCK_TUTORIAL)
 			std::cout << s << std::endl;
 
 		std::cout << std::endl;
 		for (auto s : Input::SCORE_TUTORIAL)
-			std::cout << s << std::endl;
+			std::cout << s << std::endl;*/
 		
 		std::cout << std::endl;
+		std::cout << "Rerolls left: " << _rerollsLeft << std::endl;
 		std::cout << "# Your Input: ";
 	}
 };

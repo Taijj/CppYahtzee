@@ -7,12 +7,33 @@
 
 #include "Die.h"
 
+enum Score
+{
+	Undefined = 0,
+
+	Aces,
+	Twos,
+	Threes,
+	Fours,
+	Fives,
+	Sixes,
+
+	OfKind3,
+	OfKind4,
+	FullHouse,
+	StraightSmall,
+	StraightLarge,
+	Yahtzee,
+
+	Chance
+};
+
 class Rules
 {
 public:
 	Rules() = delete;
 	
-	static constexpr std::uint32_t ROUNDS = 1;
+	static constexpr std::uint32_t ROUNDS = 3;
 	static constexpr std::uint32_t DICE = 5;
 	static constexpr std::uint32_t REROLLS = 3;
 

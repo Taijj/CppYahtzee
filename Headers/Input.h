@@ -7,17 +7,14 @@
 #include "Utils.h"
 
 using Tutorial = std::vector<std::string>;
+using ScoreCommands = std::vector<std::pair<std::string, Score>>;
 
 class Command
 {
 public: 
 	const char character;
 	const std::string description;
-	const std::vector<std::string> subCommands;	
-
-	std::string subData;
-	bool isAvailable;
-
+	
 	bool operator==(const Command& other)
 	{
 		return other.character == character;
@@ -27,13 +24,30 @@ public:
 class Input
 {
 public:
-	inline static Command ROLL = { 'r', "Roll (remaining) dice.", {} };
-	inline static Command EXIT = { 'x', "Cancel and exit game.", {} };
+	inline static Command THROW = { 't', "Throw (remaining) dice."};
+	inline static Command EXIT = { 'x', "Cancel and exit game."};
+	inline static Command LOCK = { 'l', "Select dice for later scoring." };
+	inline static Command SCORE = { 's', "End turn and start scoring." };
 
-	inline static Command LOCK = { 'l', "Select dice for later scoring and re-roll remaining dice.",
-	{ "1", "2", "3", "4", "5"} };
-	inline static Command SCORE = { 'e', "End turn and score.",
-	{ "ac", "tw", "th", "fo", "fi", "si", "3p", "4p", "fu", "ss", "sl", "ya", "ch"} };
+	inline static const std::string LOCK_COMMANDS = "12345";
+	inline static const ScoreCommands SCORE_COMMANDS =
+	{
+		{"1", Score::Aces },
+		{"2", Score::Twos },
+		{"3", Score::Threes },
+		{"4", Score::Fours },
+		{"5", Score::Fives },
+		{"6", Score::Sixes },
+		{"ac", Score::OfKind3 },
+		{"ac", Score::OfKind4 },
+		{"ac", Score::FullHouse },
+		{"ac", Score::StraightSmall },
+		{"ac", Score::StraightLarge },
+		{"ac", Score::Yahtzee },
+		{"ac", Score::Chance }
+	};	
+
+
 
 	inline static const std::string CLEAR_LINE = "\x1B[1A\x1B[2K";
 		
@@ -51,23 +65,36 @@ public:
 		" ch - Chance"
 	};
 
+	inline static const std::string INVALID_INPUT = "# INVALID INPUT! Please try again: ";
+
 
 
 	Input() = delete;
 
-	static const Command& Get()
+	static const Command& GetRound()
 	{
 		std::string input;
 		const Command* com = nullptr;
 		while (true)
 		{
 			std::cin >> input;
-			std::cout << CLEAR_LINE;
-
 			com = TryGetCommand(input);
-			if (com != nullptr)
+			
+			if (com == nullptr)
+			{
+				std::cout << CLEAR_LINE;
+				std::cout << INVALID_INPUT;
+			}
+			else
+			{
 				return *com;
+			}
 		}
+	}
+
+	static const std::string GetLock()
+	{
+		return "TODO";
 	}
 
 private:
@@ -77,46 +104,16 @@ private:
 		if (input.size() == 0)
 			return nullptr;
 
-		char first = input[0];
-
-		if (first == ROLL.character)
-			return &ROLL;
-
-		if (first == EXIT.character)
+		char first = input[0];		
+		if (first == THROW.character)
+			return &THROW;
+		else if (first == EXIT.character)
 			return &EXIT;
-
-		if (input.size() < 1)
+		else if (first == LOCK.character)
+			return &LOCK;
+		else if (first == SCORE.character)
+			return &SCORE;		
+		else
 			return nullptr;
-
-		if (first == LOCK.character)
-		{
-			LOCK.subData.clear();
-			bool subCommandWasFound = false;
-			for(std::string c : LOCK.subCommands)
-			{	
-				if (input.find(c) != -1 && LOCK.subData.find(c) == -1)
-				{
-					LOCK.subData.append(c);
-					subCommandWasFound = true;
-				}
-			}
-
-			return subCommandWasFound ? &LOCK : nullptr;
-		}
-
-		if (first == SCORE.character)
-		{			
-			SCORE.subData.clear();
-			for (std::string c : SCORE.subCommands)
-			{
-				if (input.find(c) != -1)
-				{
-					SCORE.subData = c;
-					return &SCORE;
-				}
-			}
-		}
-
-		return nullptr;
 	}
 };
