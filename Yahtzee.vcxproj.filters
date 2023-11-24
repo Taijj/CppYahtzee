@@ -21,6 +21,18 @@
     <ClCompile Include="Headers\Utils.h">
       <Filter>Headers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Turn.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Renderer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Die.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Die.h">
@@ -32,13 +44,16 @@
     <ClInclude Include="Headers\Renderer.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Round.h">
+    <ClInclude Include="Headers\Turn.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Combination.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Input.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Config.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,8 +2,8 @@
 #include <format>
 #include <exception>
 
-#include "../Headers/Utils.h"
-#include "../Headers/Round.h"
+#include "../Headers/Config.h"
+#include "../Headers/Turn.h"
 #include "../Headers/Renderer.h"
 
 int main()
@@ -13,27 +13,19 @@ int main()
         dice[i].Initialize(i+1);
         
     Renderer renderer = Renderer{ dice };
-    Round round = Round{ dice, renderer };
+    Turn turn = Turn{ dice, renderer };
     
     std::uint32_t currentRound = 0;
     while(currentRound < Rules::ROUNDS)
-    {
-        try
-        {
-            renderer.UpdateRound(currentRound+1);
+    {        
+        renderer.UpdateRound(currentRound+1);
 
-            round.Execute();
+        turn.Execute();
             
-            if(round.IsCompleted())
-                ++currentRound;
-            else if(round.IsExited())
-                break;
-        }
-        catch (std::exception e)
-        {
-            Utils::Log(e.what());
+        if(turn.IsCompleted())
+            ++currentRound;
+        else if(turn.IsExited())
             break;
-        }
     } 
 
     return 0;
