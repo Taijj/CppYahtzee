@@ -8,6 +8,15 @@
 class Die
 {
 public:
+
+	enum State
+	{
+		Default = 0,
+		Selected,
+		Locked
+	};
+
+
 	Die() = default;
 	~Die() = default;
 
@@ -15,31 +24,19 @@ public:
 	{
 		_id = id;
 		_currentValue = 0;
-		_isLocked = false;
+		_state = Default;
 	}
 
 
 
 	void Roll()
 	{			
-		_isLocked = false;
+		_state = Default;
 		_currentValue = _distribution(_generator);
 	}
 
-	void Lock()
-	{
-		_isLocked = true;
-	}
-
-	void Unlock()
-	{
-		_isLocked = false;
-	}
-
-	bool IsLocked() const
-	{
-		return _isLocked;
-	}
+	void Set(State state) { _state = state; }
+	bool Is(State state) const { return _state == state; }
 
 
 
@@ -67,5 +64,6 @@ private:
 
 	std::uint32_t _id;
 	std::uint32_t _currentValue;
-	bool _isLocked;
+		
+	State _state;
 };

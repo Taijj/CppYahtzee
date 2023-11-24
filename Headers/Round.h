@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <exception>
+#include <algorithm>
 #include "Utils.h"
 #include "Renderer.h"
 #include "Input.h"
@@ -22,14 +23,15 @@ public:
 	void Execute()
 	{		
 		for (Die d : _dice)
-			d.Unlock();			
+			d.Set(Die::Default);
 
 		_rerollCount = 0;
 		while (IsCompleted() == false)
 		{
 			Roll();
-			_renderer.Render();
-
+			_renderer.RenderHead();
+			
+			_renderer.RenderRoundInputs();
 			Evaluate(Input::GetRound());
 			
 			Utils::WaitFor(1.0f);
@@ -41,7 +43,7 @@ public:
 	bool IsCompleted()
 	{
 		return _rerollCount >= Rules::REROLLS
-			|| std::all_of(_dice.begin(), _dice.end(), [](const Die& d) { return d.IsLocked(); });
+			|| std::all_of(_dice.begin(), _dice.end(), [](const Die& d) { return d.Is(Die::Locked); });
 	}
 
 	bool IsExited()
@@ -86,7 +88,7 @@ private:
 		++_rerollCount;
 		for(Die& d : _dice)
 		{
-			if (!d.IsLocked())
+			if (!d.Is(Die::Locked))
 				d.Roll();
 		}
 		_renderer.UpdateDice(Rules::REROLLS - _rerollCount);
@@ -101,13 +103,48 @@ private:
 
 
 	void LockDice()
-	{		
-		Utils::Log("TODO//");
-		Utils::Log("Locking...");
+	{
+		const Command* com;
+		while (true)
+		{
+			_renderer.RenderHead();
+			_renderer.RenderLockInputs();
+						
+			std::string subCommands = "";
+			com = Input::GetLock(subCommands);
+			if (com != nullptr)				
+				break;
+
+			for (const char c : subCommands)
+			{				
+				std::uint32_t id = c - '0'; // Char to digit conversion
+				Die &d = *std::find_if(_dice.begin(), _dice.end(), [&](const Die &d) { return d.GetId() == id; });
+
+				if (d.Is(Die::Locked))
+				{
+					Utils::Log("Cannot modify Die #" + std::to_string(d.GetId()) + "! It is locked for this turn.");
+					continue;
+				}
+
+				d.Set(d.Is(Die::Selected) ? Die::Default : Die::Selected);
+			}
+
+			_renderer.UpdateDice(_rerollCount - Rules::REROLLS);
+		}		
+
+		for (Die& d : _dice)
+		{
+			if (d.Is(Die::Selected))
+				d.Set(Die::Locked);
+		}
+		Evaluate(*com);
 	}
 
 	void Score()
 	{
+		_renderer.RenderHead();
+		_rerollCount = Rules::REROLLS;
+
 		Utils::Log("TODO//");
 		Utils::Log("Ending turn...");
 	}	
