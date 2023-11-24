@@ -4,26 +4,29 @@
 
 #include "Die.h"
 
-enum Score
+namespace Score
 {
-	Undefined = 0,
+	enum Kind
+	{
+		Undefined = 0,
 
-	Aces,
-	Twos,
-	Threes,
-	Fours,
-	Fives,
-	Sixes,
+		Aces,
+		Twos,
+		Threes,
+		Fours,
+		Fives,
+		Sixes,
 
-	OfKind3,
-	OfKind4,
-	FullHouse,
-	StraightSmall,
-	StraightLarge,
-	Yahtzee,
+		OfKind3,
+		OfKind4,
+		FullHouse,
+		StraightSmall,
+		StraightLarge,
+		Yahtzee,
 
-	Chance
-};
+		Chance
+	};
+}
 
 namespace Rules
 {

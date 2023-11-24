@@ -3,7 +3,7 @@
 #include "Renderer.h"
 
 using Tutorial = std::vector<std::string>;
-using ScoreCommands = std::vector<std::pair<std::string, Score>>;
+//using ScoreCommands = std::vector<std::pair<std::string, ScoreKind>>;
 
 class Command
 {
@@ -27,22 +27,22 @@ public:
 	inline static Command SCORE = { 's', "End turn and start scoring." };	
 
 	inline static const std::string LOCK_COMMANDS = "12345";
-	inline static const ScoreCommands SCORE_COMMANDS =
+	/*inline static const ScoreCommands SCORE_COMMANDS =
 	{
-		{"1", Score::Aces },
-		{"2", Score::Twos },
-		{"3", Score::Threes },
-		{"4", Score::Fours },
-		{"5", Score::Fives },
-		{"6", Score::Sixes },
-		{"ac", Score::OfKind3 },
-		{"ac", Score::OfKind4 },
-		{"ac", Score::FullHouse },
-		{"ac", Score::StraightSmall },
-		{"ac", Score::StraightLarge },
-		{"ac", Score::Yahtzee },
-		{"ac", Score::Chance }
-	};	
+		{"1", ScoreKind::Aces },
+		{"2", ScoreKind::Twos },
+		{"3", ScoreKind::Threes },
+		{"4", ScoreKind::Fours },
+		{"5", ScoreKind::Fives },
+		{"6", ScoreKind::Sixes },
+		{"ac", ScoreKind::OfKind3 },
+		{"ac", ScoreKind::OfKind4 },
+		{"ac", ScoreKind::FullHouse },
+		{"ac", ScoreKind::StraightSmall },
+		{"ac", ScoreKind::StraightLarge },
+		{"ac", ScoreKind::Yahtzee },
+		{"ac", ScoreKind::Chance }
+	};	*/
 
 	
 		

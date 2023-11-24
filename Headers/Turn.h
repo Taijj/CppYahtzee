@@ -3,6 +3,9 @@
 #include "Utils.h"
 #include "Config.h"
 #include "Renderer.h"
+#include "Player.h"
+
+
 
 class Turn
 {
@@ -16,7 +19,7 @@ public:
 
 
 
-	void Execute();
+	void Execute(Player &player);
 	bool IsCompleted();
 	bool IsExited();
 
@@ -35,5 +38,5 @@ private:
 	void Roll();
 	void ExitGame();
 	void LockDice();
-	void Score();	
+	void Score(Player& player);
 };

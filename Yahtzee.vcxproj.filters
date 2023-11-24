@@ -33,6 +33,9 @@
     <ClCompile Include="Source\Die.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Player.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Die.h">
@@ -47,7 +50,7 @@
     <ClInclude Include="Headers\Turn.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Combination.h">
+    <ClInclude Include="Headers\Combos.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Input.h">

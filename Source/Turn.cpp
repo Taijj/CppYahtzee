@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../Headers/Turn.h"
+#include "../Headers/Combos.h"
 
 
 
-void Turn::Execute()
+void Turn::Execute(Player &player)
 {
 	for (Die d : _dice)
 		d.Set(Die::Default);
@@ -42,7 +43,7 @@ void Turn::Execute()
 	}	
 
 	// Scoring
-	Score();
+	Score(player);
 }
 
 bool Turn::IsCompleted()
@@ -143,10 +144,16 @@ void Turn::LockDice()
 
 
 
-void Turn::Score()
+void Turn::Score(Player &player)
 {
+	_renderer.UpdateDice(0);
+
 	_renderer.RenderRound();
+	_renderer.RenderDice();
 	_rerollCount = Rules::REROLLS;
+		
+	for (Combo* c : COMBOS)
+		player.Score(c->Kind(), c->Score(_dice));
 
 	Utils::Log("TODO//");
 	Utils::Log("Ending turn...");
