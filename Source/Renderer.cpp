@@ -1,33 +1,76 @@
 #pragma once
 
 #include "../Headers/Renderer.h"
+#include <iomanip>
 
 
 
 void Renderer::UpdateRound(std::uint32_t value)
 {
-	_roundText = std::format("========= Round {} =========", value);
+	_roundText = std::format("========= Round {} =========", value+1);
 }
 
-void Renderer::UpdateDice(const std::uint32_t rerollsLeft)
+void Renderer::UpdateRerollsLeft(std::uint32_t value)
 {
-	_rerollsLeft = rerollsLeft;
+	_rerollsText = std::format("RerollsLeft: {}", value);
+}
 
-	_diceHand.clear();
-	_diceLocked.clear();
-
-	_diceHand.push_back("Hand:");
-	_diceLocked.push_back("Locked:");
-
-	for (Die d : _dice)
+void Renderer::UpdatePlayer(Player& player)
+{		
+	_playerTable[0][0] = "Hand:";
+	for (std::size_t y = 1; y < TABLE_HEIGHT; ++y)
 	{
-		std::string entry = std::format("#{}: {}", d.GetId(), d.GetValue());
-		if (d.Is(Die::Locked) || d.Is(Die::Selected))
-			_diceLocked.push_back(entry);
+		std::size_t dieIndex = y-1;
+		std::string* entry = &_playerTable[y][0];
+
+		if (dieIndex < Rules::DICE)
+		{
+			const Die& d = _dice[dieIndex];
+			*entry = d.Is(Die::State::Default)
+				? std::format("#{} - {}", d.GetId(), d.GetValue())
+				: "";
+		}
 		else
-			_diceHand.push_back(entry);
+		{
+			*entry = "";
+		}
+	}
+
+	_playerTable[0][1] = "Locked:";
+	for (std::size_t y = 1; y < TABLE_HEIGHT; ++y)
+	{
+		std::size_t dieIndex = y - 1;
+		std::string* entry = &_playerTable[y][1];
+
+		if (dieIndex < Rules::DICE)
+		{
+			const Die& d = _dice[dieIndex];
+			*entry = d.Is(Die::State::Locked) || d.Is(Die::State::Selected)
+				? std::format("#{} - {}", d.GetId(), d.GetValue())
+				: "";
+		}
+		else
+		{
+			*entry = "";
+		}
+	}
+
+	_playerTable[0][2] = "Combos:";
+	for (std::size_t y = 1; y < TABLE_HEIGHT-1; ++y) // Only the first 6
+	{
+		std::size_t comboIndex = y - 1;
+		std::string* entry = &_playerTable[y][3];
+	
+		const Combo& c = *COMBOS[comboIndex];
+		std::string score = player.HasScore(c.Kind())
+			? std::to_string(player.GetScore(c.Kind()))
+			: "--";
+		
+		_playerTable[y][2] = std::format("{}:\t{}", c.Name(), score);
 	}
 }
+
+
 
 
 
@@ -39,15 +82,21 @@ void Renderer::RenderRound() const
 	std::cout << std::endl;
 }
 
-void Renderer::RenderDice() const
+void Renderer::RenderTable() const
 {
 	std::cout << ROLL_HEADLINE << std::endl;
 	std::cout << std::endl;
-	for (std::uint32_t i = 0; i < COLUMN_LENGTH; ++i)
+
+	for (std::size_t y = 0; y < TABLE_HEIGHT; ++y)
 	{
-		const std::string hand = i < _diceHand.size() ? _diceHand[i] : "";
-		const std::string lock = i < _diceLocked.size() ? _diceLocked[i] : "";
-		std::cout << INDENT << hand << "\t  " << lock << std::endl;
+		std::cout << INDENT;
+		for (std::size_t x = 0; x < TABLE_WIDTH; ++x)
+		{
+			std::cout << std::setw(ENTRY_WIDTH)
+				<< std::left				
+				<< _playerTable[y][x];
+		}
+		std::cout << std::endl;
 	}
 	std::cout << std::endl;
 }
@@ -72,7 +121,7 @@ void Renderer::RenderRoundInputs() const
 	std::cout << INDENT << Input::SCORE.character << " - " << Input::SCORE.description << std::endl;
 
 	std::cout << std::endl;
-	std::cout << "Rerolls left: " << _rerollsLeft << std::endl;
+	std::cout << _rerollsText << std::endl;
 	std::cout << YOUR_INPUT;
 }
 

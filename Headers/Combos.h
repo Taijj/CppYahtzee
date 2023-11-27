@@ -1,22 +1,38 @@
 #pragma once
 
 #include "Config.h"
-#include <concepts>
+#include <algorithm>
 
 
 
 class Combo
 {
 public:   
+    
+    Combo(const char* name) : _name(name)
+    {}
+
+    ~Combo() = default;
+
+    const char* Name() const
+    {
+        return _name;
+    }
+
     virtual Score::Kind Kind() const = 0;
     virtual std::uint32_t Score(GameDice& dice) const = 0;
+
+private:
+    const char* _name;
 };
 
 class ComboInt : public Combo
 {
 public:
-    ComboInt(std::uint32_t value) : _value(value)
-    {}
+    ComboInt(const char* name, std::uint32_t value) : Combo(name)
+    {
+        _value = std::clamp(value, 1U, Rules::DICE);
+    }
 
     Score::Kind Kind() const final
     {
@@ -25,8 +41,6 @@ public:
 
     std::uint32_t Score(GameDice& dice) const final
     {
-        Utils::Log("Scored Int");
-
         std::uint32_t sum = 0;        
         for (Die& d : dice)
         {
@@ -43,16 +57,16 @@ private:
 
 
 
-ComboInt aces = { 1 };
-ComboInt twos = { 2 };
-ComboInt threes = { 3 };
-ComboInt fours = { 4 };
-ComboInt fives = { 5 };
-ComboInt sixes = { 6 };
+const ComboInt aces = { "Aces", 1};
+const ComboInt twos = { "Twos", 2 };
+const ComboInt threes = { "Threes", 3 };
+const ComboInt fours = { "Fours", 4 };
+const ComboInt fives = { "Fives", 5 };
+const ComboInt sixes = { "Sixes", 6 };
 
-const std::vector<Combo*> COMBOS =
+const std::vector<const Combo*> COMBOS =
 {
-    &aces, &twos, &threes
+    &aces, &twos, &threes, &fours, &fives, &sixes
 };
 
 

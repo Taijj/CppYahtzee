@@ -1,15 +1,13 @@
-#pragma once
-
 #include "../Headers/Turn.h"
-#include "../Headers/Combos.h"
 
 
 
 void Turn::Execute(Player &player)
 {
+	_player = &player;
+	_rerollsLeft = Rules::REROLLS;
 	for (Die d : _dice)
 		d.Set(Die::Default);
-	_rerollCount = Rules::REROLLS;
 
 	// First Throw
 	while (true)
@@ -35,6 +33,7 @@ void Turn::Execute(Player &player)
 	while (IsCompleted() == false)
 	{
 		_renderer.RenderRound();
+		_renderer.RenderTable();
 		_renderer.RenderRoundInputs();
 		Evaluate(Input::GetDefault());
 		
@@ -43,12 +42,12 @@ void Turn::Execute(Player &player)
 	}	
 
 	// Scoring
-	Score(player);
+	Score();
 }
 
 bool Turn::IsCompleted()
 {
-	return _rerollCount <= 0
+	return _rerollsLeft <= 0
 		|| std::all_of(_dice.begin(), _dice.end(), [](const Die& d) { return d.Is(Die::Locked); });
 }
 
@@ -77,7 +76,7 @@ void Turn::Evaluate(const Command command)
 	else if (command == Input::SCORE)
 	{
 		// Naturally progress to scoring
-		_rerollCount = 0;
+		_rerollsLeft = 0;
 	}
 }
 
@@ -88,8 +87,9 @@ void Turn::Roll()
 		if (!d.Is(Die::Locked))
 			d.Roll();
 	}
-	--_rerollCount;
-	_renderer.UpdateDice(_rerollCount);
+	--_rerollsLeft;
+	_renderer.UpdateRerollsLeft(_rerollsLeft);
+	_renderer.UpdatePlayer(*_player);
 }
 
 void Turn::ExitGame()
@@ -110,6 +110,7 @@ void Turn::LockDice()
 	while (true)
 	{
 		_renderer.RenderRound();
+		_renderer.RenderTable();
 		_renderer.RenderLockInputs();
 
 		std::string subCommands = "";
@@ -131,7 +132,7 @@ void Turn::LockDice()
 			d.Set(d.Is(Die::Selected) ? Die::Default : Die::Selected);
 		}
 
-		_renderer.UpdateDice(_rerollCount - Rules::REROLLS);
+		_renderer.UpdatePlayer(*_player);
 	}
 
 	for (Die& d : _dice)
@@ -144,16 +145,14 @@ void Turn::LockDice()
 
 
 
-void Turn::Score(Player &player)
+void Turn::Score()
 {
-	_renderer.UpdateDice(0);
-
+	_renderer.UpdatePlayer(*_player);
 	_renderer.RenderRound();
-	_renderer.RenderDice();
-	_rerollCount = Rules::REROLLS;
+	_renderer.RenderTable();
 		
-	for (Combo* c : COMBOS)
-		player.Score(c->Kind(), c->Score(_dice));
+	//for (Combo* c : COMBOS)
+		//_player->Score(c->Kind(), c->Score(_dice));
 
 	Utils::Log("TODO//");
 	Utils::Log("Ending turn...");

@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "Renderer.h"
 #include "Player.h"
+#include "Combos.h"
 
 
 
@@ -12,7 +13,8 @@ class Turn
 
 public:
 	Turn(GameDice& dice, Renderer& renderer)
-		: _renderer(renderer), _dice(dice), _rerollCount(0), _isExited(false)
+		: _renderer(renderer), _dice(dice), _player(nullptr),
+		_rerollsLeft(0), _isExited(false)
 	{}
 
 	~Turn() = default;
@@ -28,8 +30,9 @@ public:
 private:	
 	Renderer& _renderer;
 	GameDice& _dice;
+	Player* _player;
 
-	std::uint32_t _rerollCount;
+	std::uint32_t _rerollsLeft;
 	bool _isExited;
 	
 
@@ -38,5 +41,5 @@ private:
 	void Roll();
 	void ExitGame();
 	void LockDice();
-	void Score(Player& player);
+	void Score();
 };

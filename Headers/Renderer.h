@@ -2,25 +2,29 @@
 #include <string>
 #include <format>
 #include <iostream>
-#include <vector>
+#include <array>
 #include <map>
 
 #include "Config.h"
 #include "Input.h"
+#include "Player.h"
+#include "Combos.h"
 
-using DieColumn = std::vector<std::string>;
+
+
+constexpr std::size_t TABLE_WIDTH = 4; // 2 Columns for Dice, 2 Columns for scored combos
+constexpr std::size_t TABLE_HEIGHT = 8; // The 13 combos divided by 2, ceild + a row for headlines
+using Table = std::array<std::array<std::string, TABLE_WIDTH>, TABLE_HEIGHT>;
 
 class Renderer
 {
 
-
 public:
 	Renderer(GameDice& dice) :
 		_dice{dice},
-		_diceHand(DieColumn(COLUMN_LENGTH)),
-		_diceLocked(DieColumn(COLUMN_LENGTH)),
+		_playerTable(Table{}),
 		_roundText(""),
-		_rerollsLeft(0)
+		_rerollsText("")
 	{}	
 		
 	~Renderer() = default;
@@ -28,12 +32,13 @@ public:
 
 
 	void UpdateRound(std::uint32_t value);
-	void UpdateDice(const std::uint32_t rerollsLeft);
+	void UpdateRerollsLeft(std::uint32_t value);
+	void UpdatePlayer(Player& value);
 
 
 
 	void RenderRound() const;
-	void RenderDice() const;
+	void RenderTable() const;
 	void RenderFirstThrow() const;
 
 	void RenderRoundInputs() const;
@@ -51,12 +56,14 @@ private:
 	inline static const char* CLEAR = "\033[2J\033[1;1H";	
 	inline static const std::string CLEAR_LINE = "\x1B[1A\x1B[2K";
 	inline static const char* ROLL_HEADLINE = "Player threw the dice...";
-	inline static constexpr std::uint32_t COLUMN_LENGTH = Rules::DICE + 1; // All Dice + a Headline
+		
+	inline static constexpr std::uint32_t ENTRY_WIDTH = 10U;
+	
+	
 
 	const GameDice& _dice;
-	DieColumn _diceHand;
-	DieColumn _diceLocked;
+	Table _playerTable;
 
 	std::string _roundText;
-	std::uint32_t _rerollsLeft;
+	std::string _rerollsText;
 };

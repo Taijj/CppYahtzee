@@ -10,14 +10,16 @@ using ScoresByKind = std::map<Score::Kind, std::uint32_t>;
 class Player
 {
 public:
-	Player(std::uint32_t id) : _id(id), _scoresByKind(ScoresByKind{})
+	Player(std::uint32_t id) : _id(id), _scoresByKind(ScoresByKind{}), _scoreTotal(0)
 	{}
 
 	~Player() = default;
 
 	void Reset();
-	void Score(Score::Kind kind, std::uint32_t value);
-	bool HasScore(Score::Kind kind);
+	bool HasScore(Score::Kind kind) const;
+
+	void SetScore(Score::Kind kind, std::uint32_t value);	
+	std::uint32_t GetScore(Score::Kind kind);	
 
 private:
 	std::uint32_t _id;
