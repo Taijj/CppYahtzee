@@ -30,7 +30,7 @@ namespace Score
 
 namespace Rules
 {
-	static constexpr std::uint32_t ROUNDS = 3;
+	static constexpr std::uint32_t ROUNDS = 13;
 	static constexpr std::uint32_t DICE = 5;
 	static constexpr std::uint32_t REROLLS = 3;
 

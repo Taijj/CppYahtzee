@@ -31,7 +31,7 @@ class ComboInt : public Combo
 public:
     ComboInt(const char* name, std::uint32_t value) : Combo(name)
     {
-        _value = std::clamp(value, 1U, Rules::DICE);
+        _value = std::clamp(value, 1U, 6U); // Count of die sides
     }
 
     Score::Kind Kind() const final { return static_cast<Score::Kind>(_value); }
@@ -101,7 +101,7 @@ public:
     ComboStraighLarge(const char* name) : Combo(name)
     {}
 
-    Score::Kind Kind() const final { return Score::StraightSmall; }
+    Score::Kind Kind() const final { return Score::StraightLarge; }
 
     std::uint32_t Score(GameDice& dice) const final { return 66; }
 };

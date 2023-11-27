@@ -72,6 +72,7 @@ public:
 	static const Command* GetScoring(Score::Kind& result);
 
 	static bool IsExitConfirmed();
+	static void WaitForAnyKey();
 
 private:
 

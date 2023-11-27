@@ -139,11 +139,19 @@ bool Input::IsExitConfirmed()
 	}
 }
 
+void Input::WaitForAnyKey()
+{	
+	char c;
+	std::cin.clear(); // clear any potential error flags
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+	std::cin.get(c); // wait for any input
+}
+
 
 
 const Command* Input::TryGetCommand(const std::string& input)
 {
-	if (input.size() == 0)
+	if (input.size() != 1)
 		return nullptr;
 
 	char first = input[0];

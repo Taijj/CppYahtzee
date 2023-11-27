@@ -87,10 +87,29 @@ void Turn::RunScoring()
 		return;
 	}
 
-	Utils::Log("TODO: Do actual Scoring");
-	Utils::WaitFor(1);
+	if (_player->HasScore(kind))
+	{
+		// TODO
+		// Utils::Log("Cannot score as {kind} since you already scored there.");
+		return;
+	}
+	
+	for (const Combo* c : COMBOS)
+	{
+		if (c->Kind() == kind)
+		{
+			std::uint32_t score = c->Score(_dice);
+			_player->SetScore(kind, score);
+			break;
+		}
+	}
 
 	_state = Turn::Completed;
+	_renderer.UpdatePlayer(*_player);
+	_renderer.RenderRound();
+	_renderer.RenderTable();
+	
+	Input::WaitForAnyKey();
 }
 
 
