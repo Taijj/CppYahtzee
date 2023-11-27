@@ -20,6 +20,7 @@ public:
 
 	void SetScore(Score::Kind kind, std::uint32_t value);	
 	std::uint32_t GetScore(Score::Kind kind);	
+	std::uint32_t GetTotal() const;
 
 private:
 	std::uint32_t _id;

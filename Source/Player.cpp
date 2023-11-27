@@ -26,3 +26,8 @@ bool Player::HasScore(Score::Kind kind) const
 {
 	return _scoresByKind.contains(kind);
 }
+
+std::uint32_t Player::GetTotal() const
+{
+	return _scoreTotal;
+}

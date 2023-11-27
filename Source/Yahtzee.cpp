@@ -41,8 +41,9 @@ int main()
     Renderer renderer = Renderer{ dice };
     Turn turn = Turn{ dice, renderer };
 
-    TestScoring(dice, 100);
-    return 0;
+    // Uncomment for testing
+    //TestScoring(dice, 100);
+    //return 0;
 
     bool isCanceled = false;
     std::uint32_t currentRound = 0;

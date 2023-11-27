@@ -69,7 +69,7 @@ void Renderer::UpdatePlayer(Player& player)
 		_playerTable[y][2] = std::format("{}: {}", c.Name(), score);
 	}
 
-	// Combos column 2
+	_playerTable[0][3] = std::format("Total: {}", player.GetTotal());
 	for (std::size_t y = 1; y < TABLE_HEIGHT; ++y)
 	{
 		std::size_t comboIndex = y + 5; // after the first 6

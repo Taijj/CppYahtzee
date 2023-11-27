@@ -18,21 +18,40 @@ public:
     const char* Name() const
     {
         return _name;
-    }
-            
+    }            
+    
+
+
+    virtual Score::Kind Kind() const = 0;
+    virtual std::uint32_t Score(GameDice& dice) const = 0;
+
+
+
     static std::uint32_t CountOfKind(GameDice& dice, std::uint32_t value)
     {
         auto count = std::count_if(dice.begin(), dice.end(),
             [value](const Die& d) { return d.GetValue() == value; });
         return static_cast<std::uint32_t>(count);
-    }    
+    }
 
-    virtual Score::Kind Kind() const = 0;
-    virtual std::uint32_t Score(GameDice& dice) const = 0;
+    static std::uint32_t Sum(GameDice& dice)
+    {
+        // Could do this:
+        //return std::accumulate(dice.begin(), dice.end(), 0,
+            //[](std::uint32_t sum, const Die& d) { return sum + d.GetValue(); });
+
+        // But I like this much better, better readable imho:
+        std::uint32_t sum = 0;
+        for (Die& d : dice)
+            sum += d.GetValue();
+        return sum;
+    }
 
 private:
     const char* _name;
 };
+
+
 
 class ComboInt : public Combo
 {
@@ -53,57 +72,68 @@ private:
     std::uint32_t _value;
 };
 
-class Combo3 : public Combo
+class ComboOfKind : public Combo
 {
 public:
-    Combo3(const char* name) : Combo(name)
+    ComboOfKind(const char* name, Score::Kind kind, std::uint32_t value, std::uint32_t fixedScore = 0)
+        : Combo(name), _kind(kind), _value(value), _fixedScore(fixedScore)
     {}
 
-    Score::Kind Kind() const final { return Score::OfKind3; }
+    Score::Kind Kind() const final { return _kind; }
 
-    std::uint32_t Score(GameDice& dice) const final
-    {         
+    std::uint32_t Score(GameDice & dice) const final
+    {
         for (Die& d : dice)
         {
-            const std::uint32_t count = CountOfKind(dice, d.GetValue());
-            if (count < 3) // 3 of a kind
-                continue;
-            
-            // Wanted to try accumulate
-            return std::accumulate(dice.begin(), dice.end(), 0,
-                [](std::uint32_t sum, const Die& d) { return sum + d.GetValue(); });
+            if (CountOfKind(dice, d.GetValue()) >= _value)
+                return _fixedScore == 0 ? Sum(dice) : _fixedScore;
         }
-
         return 0;
     }
+
+private:
+    const Score::Kind _kind;
+    const std::uint32_t _value;
+    const std::uint32_t _fixedScore;
 };
 
-class Combo4 : public Combo
+class ComboStraight : public Combo
 {
 public:
-    Combo4(const char* name) : Combo(name)
+    ComboStraight(const char* name, Score::Kind kind, std::int32_t length, std::int32_t score)
+        : Combo(name), _kind(kind), _length(length), _score(score)
     {}
 
-    Score::Kind Kind() const final { return Score::OfKind4; }
+    Score::Kind Kind() const final { return _kind; }
 
     std::uint32_t Score(GameDice& dice) const final
-    { 
-        for (Die& d : dice)
+    {
+        const Die& min = *std::min_element(dice.begin(), dice.end(),
+            [](const Die& d1, const Die& d2) { return d1.GetValue() < d2.GetValue(); });
+
+        std::uint32_t count = 0;
+        for (std::uint32_t i = 0; i < _length; ++i)
         {
-            const std::uint32_t count = CountOfKind(dice, d.GetValue());
-            if (count < 4) // 4 of a kind
-                continue;
-            
-            // Actually prefer this way, is more readably i think
-            std::uint32_t sum = 0;
             for (Die& d : dice)
-                sum += d.GetValue();
-            return sum;
+            {
+                if (d.GetValue() == min.GetValue() + i)
+                {
+                    count++;
+                    break;
+                }
+            }
         }
 
-        return 0;
+        return count == _length ? _score : 0;
     }
+
+private:
+    const Score::Kind _kind;
+    const std::uint32_t _length;
+    const std::uint32_t _score;
 };
+
+
 
 class ComboFullHouse : public Combo
 {
@@ -131,85 +161,6 @@ public:
     }    
 };
 
-class ComboStraighSmall : public Combo
-{
-public:
-    ComboStraighSmall(const char* name) : Combo(name)
-    {}
-
-    Score::Kind Kind() const final { return Score::StraightSmall; }
-
-    std::uint32_t Score(GameDice& dice) const final
-    {
-        const Die& min = *std::min_element(dice.begin(), dice.end(),
-            [](const Die& d1, const Die& d2) { return d1.GetValue() < d2.GetValue(); });
-
-        std::uint32_t count = 0;
-        for (std::uint32_t i = 0; i < Rules::DICE-1; ++i)
-        {
-            for (Die &d : dice)
-            {
-                if (d.GetValue() == min.GetValue() + i)
-                {
-                    count++;
-                    break;
-                }
-            }
-        }
-
-        return count == Rules::DICE-1 ? 30 : 0;
-    }
-};
-
-class ComboStraighLarge : public Combo
-{
-public:
-    ComboStraighLarge(const char* name) : Combo(name)
-    {}
-
-    Score::Kind Kind() const final { return Score::StraightLarge; }
-
-    std::uint32_t Score(GameDice& dice) const final
-    {
-        const Die& min = *std::min_element(dice.begin(), dice.end(),
-            [](const Die& d1, const Die& d2) { return d1.GetValue() < d2.GetValue(); });
-
-        std::uint32_t count = 0;
-        for (std::uint32_t i = 0; i < Rules::DICE; ++i)
-        {
-            for (Die& d : dice)
-            {
-                if (d.GetValue() == min.GetValue() + i)
-                {
-                    count++;
-                    break;
-                }
-            }
-        }
-
-        return count == Rules::DICE ? 40 : 0;
-    }
-};
-
-class ComboYathzee : public Combo
-{
-public:
-    ComboYathzee(const char* name) : Combo(name)
-    {}
-
-    Score::Kind Kind() const final { return Score::Yahtzee; }
-
-    std::uint32_t Score(GameDice& dice) const final
-    {
-        for (std::uint32_t i = 0; i < Rules::DIE_SIDES; ++i)
-        {
-            if (CountOfKind(dice, i) == Rules::DICE)
-                return 50;
-        }
-        return 0;
-    }
-};
-
 class ComboChance : public Combo
 {
 public:
@@ -218,13 +169,7 @@ public:
 
     Score::Kind Kind() const final { return Score::Chance; }
 
-    std::uint32_t Score(GameDice& dice) const final 
-    { 
-        std::uint32_t sum = 0;
-        for (Die& d : dice)
-            sum += d.GetValue();
-        return sum;
-    }
+    std::uint32_t Score(GameDice& dice) const final { return Sum(dice); }
 };
 
 
@@ -238,12 +183,12 @@ const ComboInt fours = { "Fours", 4 };
 const ComboInt fives = { "Fives", 5 };
 const ComboInt sixes = { "Sixes", 6 };
 
-const Combo3 ofKind3 = { "3 of a Kind" };
-const Combo4 ofKind4 = { "4 of a Kind" };
+const ComboOfKind ofKind3 = { "3 of a Kind", Score::OfKind3, 3 };
+const ComboOfKind ofKind4 = { "4 of a Kind", Score::OfKind4, 4 };
 const ComboFullHouse full = { "Full House" };
-const ComboStraighSmall straightS = { "Small Straight" };
-const ComboStraighLarge straightL = { "Large Straight" };
-const ComboYathzee yathzee = { "Yathzee" };
+const ComboStraight straightS = { "Small Straight", Score::StraightSmall, 4, 30 };
+const ComboStraight straightL = { "Large Straight", Score::StraightLarge, 5, 40 };
+const ComboOfKind yathzee = { "Yathzee", Score::Yahtzee, 5, 50 };
 const ComboChance chance = { "Chance" };
 
 const std::vector<const Combo*> COMBOS =
