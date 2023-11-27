@@ -57,7 +57,7 @@ private:
 	inline static const std::string CLEAR_LINE = "\x1B[1A\x1B[2K";
 	inline static const char* ROLL_HEADLINE = "Player threw the dice...";
 		
-	inline static constexpr std::uint32_t ENTRY_WIDTH = 10U;
+	inline static constexpr std::uint32_t ENTRY_WIDTH = 15U;
 	
 	
 

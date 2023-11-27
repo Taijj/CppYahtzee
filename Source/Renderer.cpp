@@ -59,14 +59,28 @@ void Renderer::UpdatePlayer(Player& player)
 	for (std::size_t y = 1; y < TABLE_HEIGHT-1; ++y) // Only the first 6
 	{
 		std::size_t comboIndex = y - 1;
-		std::string* entry = &_playerTable[y][3];
+		std::string* entry = &_playerTable[y][2];
 	
 		const Combo& c = *COMBOS[comboIndex];
 		std::string score = player.HasScore(c.Kind())
 			? std::to_string(player.GetScore(c.Kind()))
 			: "--";
 		
-		_playerTable[y][2] = std::format("{}:\t{}", c.Name(), score);
+		_playerTable[y][2] = std::format("{}: {}", c.Name(), score);
+	}
+
+	// Combos column 2
+	for (std::size_t y = 1; y < TABLE_HEIGHT; ++y)
+	{
+		std::size_t comboIndex = y + 5; // after the first 6
+		std::string* entry = &_playerTable[y][3];
+
+		const Combo& c = *COMBOS[comboIndex];
+		std::string score = player.HasScore(c.Kind())
+			? std::to_string(player.GetScore(c.Kind()))
+			: "--";
+
+		_playerTable[y][3] = std::format("{}: {}", c.Name(), score);
 	}
 }
 
