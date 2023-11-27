@@ -140,8 +140,7 @@ void Renderer::RenderRoundInputs() const
 }
 
 void Renderer::RenderLockInputs() const
-{
-	std::cout << std::endl;
+{	
 	for (auto s : Input::LOCK_TUTORIAL)
 		std::cout << s << std::endl;
 
@@ -149,6 +148,17 @@ void Renderer::RenderLockInputs() const
 	std::cout << Input::EXIT.character << " - " << Input::EXIT.description << "\t";
 	std::cout << Input::SCORE.character << " - " << Input::SCORE.description << std::endl;
 
+	std::cout << std::endl;
+	std::cout << _rerollsText << std::endl;
+	std::cout << YOUR_INPUT;
+}
+
+void Renderer::RenderScoreInputs() const
+{	
+	for (auto s : Input::SCORE_TUTORIAL)
+		std::cout << s << std::endl;
+		
+	std::cout << std::endl << Input::EXIT.character << " - " << Input::EXIT.description << std::endl;
 	std::cout << std::endl;
 	std::cout << YOUR_INPUT;
 }
@@ -164,6 +174,12 @@ void Renderer::RenderExitConfirmation() const
 }
 
 void Renderer::RenderInvalid()
+{
+	std::cout << CLEAR_LINE;
+	std::cout << INVALID_INPUT;
+}
+
+void Renderer::RenderAlreadyScored()
 {
 	std::cout << CLEAR_LINE;
 	std::cout << INVALID_INPUT;

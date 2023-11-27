@@ -3,8 +3,25 @@
 #include "../Headers/Input.h"
 
 
+const Command Input::GetInitial()
+{
+	std::string input;
+	const Command* com = nullptr;
+	while (true)
+	{
+		std::cin >> input;
+		com = TryGetCommand(input);
+				
+		if (com == nullptr)
+			Renderer::RenderInvalid();
+		else if (*com != THROW && *com != EXIT)
+			Renderer::RenderInvalid();
+		else
+			return *com;
+	}
+}
 
-const Command Input::GetDefault()
+const Command Input::GetPlaying()
 {
 	std::string input;
 	const Command* com = nullptr;
@@ -20,7 +37,7 @@ const Command Input::GetDefault()
 	}
 }
 
-const Command* Input::GetLock(std::string& result)
+const Command* Input::GetLocking(std::string& result)
 {
 	std::string input = "";
 	const Command* command = nullptr;
@@ -54,9 +71,49 @@ const Command* Input::GetLock(std::string& result)
 		if (result.size() == 0)
 			Renderer::RenderInvalid();
 		else
-			return nullptr;
+			return command;
 	}
 }
+
+const Command* Input::GetScoring(Score::Kind& result)
+{
+	std::string input = "";
+	const Command* defaultCommand = nullptr;
+	while (true)
+	{
+		result = Score::Kind::Undefined;
+		std::cin >> input;
+
+		int length = static_cast<int>(input.size());
+		if (length < 0)
+		{
+			Renderer::RenderInvalid();
+			continue;
+		}
+
+		// Return early, if player wants to exit
+		defaultCommand = TryGetCommand(input);
+		if (defaultCommand != nullptr && *defaultCommand == EXIT)
+			return defaultCommand;
+
+
+		std::uint32_t commandLength = length == 1 ? 1 : 2;		
+		for (std::uint32_t i = 0; i < SCORE_COMMANDS.size(); ++i)
+		{
+			std::string com = input.substr(0, commandLength);
+			if (com == SCORE_COMMANDS[i].first)
+			{
+				result = SCORE_COMMANDS[i].second;
+				return defaultCommand;
+			}
+		}
+		
+		Renderer::RenderInvalid();
+	}
+	return defaultCommand;
+}
+
+
 
 bool Input::IsExitConfirmed()
 {

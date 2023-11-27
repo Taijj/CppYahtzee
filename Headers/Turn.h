@@ -12,18 +12,31 @@ class Turn
 {
 
 public:
+	enum State
+	{
+		None = 0,
+
+		Initial,
+		Playing,
+		Locking,
+		Scoring,
+		Completed,
+
+		Canceled
+	};
+
+
+
 	Turn(GameDice& dice, Renderer& renderer)
 		: _renderer(renderer), _dice(dice), _player(nullptr),
-		_rerollsLeft(0), _isExited(false)
+		_rerollsLeft(0), _state(None)
 	{}
 
 	~Turn() = default;
 
 
-
-	void Execute(Player &player);
-	bool IsCompleted();
-	bool IsExited();
+	void Start(Player& player);
+	State Run();
 
 
 
@@ -33,13 +46,14 @@ private:
 	Player* _player;
 
 	std::uint32_t _rerollsLeft;
-	bool _isExited;
+	State _state;
 	
+	void RunInitial();
+	void RunPlaying();
+	void RunLocking();
+	void RunScoring();
 
-
-	void Evaluate(const Command command);
-	void Roll();
+	void Execute(const Command command);
+	void RollDice();
 	void ExitGame();
-	void LockDice();
-	void Score();
 };

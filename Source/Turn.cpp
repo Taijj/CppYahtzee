@@ -2,68 +2,104 @@
 
 
 
-void Turn::Execute(Player &player)
+void Turn::Start(Player& player)
 {
 	_player = &player;
 	_rerollsLeft = Rules::REROLLS;
 	for (Die d : _dice)
 		d.Set(Die::Default);
+	_state = Turn::Initial;
+}
 
-	// First Throw
-	while (true)
+Turn::State Turn::Run()
+{
+	switch (_state)
 	{
-		_renderer.RenderRound();
-		_renderer.RenderFirstThrow();
-
-		const Command com = Input::GetDefault();
-		if (com == Input::THROW)
-		{
-			Roll();
-			break;
-		}
-
-		if (com == Input::EXIT)
-			ExitGame();
-
-		if (_isExited)
-			return;
+		case Turn::Initial: RunInitial(); break;
+		case Turn::Playing: RunPlaying(); break;
+		case Turn::Locking: RunLocking(); break;
+		case Turn::Scoring: RunScoring(); break;
 	}
 
-	// Main Loop
-	while (IsCompleted() == false)
+	return _state;
+}
+
+void Turn::RunInitial()
+{
+	_renderer.RenderRound();
+	_renderer.RenderFirstThrow();
+
+	Execute(Input::GetInitial());	
+}
+
+void Turn::RunPlaying()
+{
+	_renderer.RenderRound();
+	_renderer.RenderTable();
+	_renderer.RenderRoundInputs();
+
+	Execute(Input::GetPlaying());
+}
+
+void Turn::RunLocking()
+{
+	_renderer.RenderRound();
+	_renderer.RenderTable();
+	_renderer.RenderLockInputs();
+
+	std::string sub = "";
+	const Command* com = Input::GetLocking(sub);
+	if (com != nullptr)
 	{
-		_renderer.RenderRound();
-		_renderer.RenderTable();
-		_renderer.RenderRoundInputs();
-		Evaluate(Input::GetDefault());
+		Execute(*com);
+		return;
+	}
+
+	for (const char c : sub)
+	{
+		std::uint32_t id = c - '0'; // Char to digit conversion
+		Die& d = *std::find_if(_dice.begin(), _dice.end(), [&](const Die& d) { return d.GetId() == id; });
+
+		if (d.Is(Die::Locked))
+		{
+			// TODO
+			// Utils::Log("Cannot modify Die #" + std::to_string(d.GetId()) + "! It is locked for this turn.");
+			continue;
+		}
+
+		d.Set(d.Is(Die::Selected) ? Die::Default : Die::Selected);
+	}
+
+	_renderer.UpdatePlayer(*_player);
+}
+
+void Turn::RunScoring()
+{	
+	_renderer.RenderRound();
+	_renderer.RenderTable();
+	_renderer.RenderScoreInputs();
 		
-		if (_isExited)
-			return;
-	}	
+	Score::Kind kind;
+	const Command* com = Input::GetScoring(kind);
+	if (com != nullptr)
+	{
+		Execute(*com);
+		return;
+	}
 
-	// Scoring
-	Score();
-}
+	Utils::Log("TODO: Do actual Scoring");
+	Utils::WaitFor(1);
 
-bool Turn::IsCompleted()
-{
-	return _rerollsLeft <= 0
-		|| std::all_of(_dice.begin(), _dice.end(), [](const Die& d) { return d.Is(Die::Locked); });
-}
-
-bool Turn::IsExited()
-{
-	return _isExited;
+	_state = Turn::Completed;
 }
 
 
 
-
-void Turn::Evaluate(const Command command)
+void Turn::Execute(const Command command)
 {
 	if (command == Input::THROW)
 	{
-		Roll();
+		RollDice();
 	}
 	else if (command == Input::EXIT)
 	{
@@ -71,23 +107,27 @@ void Turn::Evaluate(const Command command)
 	}
 	else if (command == Input::LOCK)
 	{
-		LockDice();
+		_state = Turn::Locking;
 	}
 	else if (command == Input::SCORE)
 	{
-		// Naturally progress to scoring
-		_rerollsLeft = 0;
+		_state = Turn::Scoring;
 	}
 }
 
-void Turn::Roll()
+void Turn::RollDice()
 {
 	for (Die& d : _dice)
 	{
+		if (d.Is(Die::Selected))
+			d.Set(Die::Locked);
+
 		if (!d.Is(Die::Locked))
 			d.Roll();
 	}
 	--_rerollsLeft;
+	_state = _rerollsLeft > 0 ? Turn::Playing : Turn::Scoring;
+
 	_renderer.UpdateRerollsLeft(_rerollsLeft);
 	_renderer.UpdatePlayer(*_player);
 }
@@ -95,66 +135,6 @@ void Turn::Roll()
 void Turn::ExitGame()
 {
 	_renderer.RenderExitConfirmation();
-	if (false == Input::IsExitConfirmed())
-		return;
-	
-	_isExited = true;
-	Utils::Log("\nExiting...\n\n");
-}
-
-
-
-void Turn::LockDice()
-{
-	const Command* com;
-	while (true)
-	{
-		_renderer.RenderRound();
-		_renderer.RenderTable();
-		_renderer.RenderLockInputs();
-
-		std::string subCommands = "";
-		com = Input::GetLock(subCommands);
-		if (com != nullptr)
-			break;
-
-		for (const char c : subCommands)
-		{
-			std::uint32_t id = c - '0'; // Char to digit conversion
-			Die& d = *std::find_if(_dice.begin(), _dice.end(), [&](const Die& d) { return d.GetId() == id; });
-
-			if (d.Is(Die::Locked))
-			{
-				Utils::Log("Cannot modify Die #" + std::to_string(d.GetId()) + "! It is locked for this turn.");
-				continue;
-			}
-
-			d.Set(d.Is(Die::Selected) ? Die::Default : Die::Selected);
-		}
-
-		_renderer.UpdatePlayer(*_player);
-	}
-
-	for (Die& d : _dice)
-	{
-		if (d.Is(Die::Selected))
-			d.Set(Die::Locked);
-	}
-	Evaluate(*com);
-}
-
-
-
-void Turn::Score()
-{
-	_renderer.UpdatePlayer(*_player);
-	_renderer.RenderRound();
-	_renderer.RenderTable();
-		
-	//for (Combo* c : COMBOS)
-		//_player->Score(c->Kind(), c->Score(_dice));
-
-	Utils::Log("TODO//");
-	Utils::Log("Ending turn...");
-	Utils::WaitFor(2.0f);
+	if (Input::IsExitConfirmed())
+		_state = Turn::Canceled;
 }

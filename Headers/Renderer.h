@@ -43,8 +43,11 @@ public:
 
 	void RenderRoundInputs() const;
 	void RenderLockInputs() const;
+	void RenderScoreInputs() const;
 	void RenderExitConfirmation() const;
+	
 	static void RenderInvalid();
+	static void RenderAlreadyScored();
 
 
 
@@ -53,6 +56,7 @@ private:
 	inline static const char* INDENT = "  ";
 	inline static const std::string YOUR_INPUT = "# Your Input: ";
 	inline static const std::string INVALID_INPUT = "# INVALID INPUT! Please try again: ";
+	inline static const std::string ALREADY_SCORED = "# You already scored this Combo! Try another: ";
 	inline static const char* CLEAR = "\033[2J\033[1;1H";	
 	inline static const std::string CLEAR_LINE = "\x1B[1A\x1B[2K";
 	inline static const char* ROLL_HEADLINE = "Player threw the dice...";

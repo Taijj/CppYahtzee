@@ -18,19 +18,28 @@ int main()
         
     Renderer renderer = Renderer{ dice };
     Turn turn = Turn{ dice, renderer };
-    
+        
+    bool isCanceled = false;
     std::uint32_t currentRound = 0;
-    while(currentRound < Rules::ROUNDS)
-    {        
-        renderer.UpdateRound(currentRound+1);
+    while(true) // round loop
+    {
+        renderer.UpdateRound(currentRound);
+        turn.Start(player);
 
-        turn.Execute(player);
-            
-        if(turn.IsCompleted())
-            ++currentRound;
-        else if(turn.IsExited())
+        while (true) // turn loop
+        {
+            Turn::State state = turn.Run();
+            isCanceled = state == Turn::State::Canceled;
+                        
+            if (isCanceled || state == Turn::State::Completed)
+                break;
+        }
+
+        ++currentRound;
+        if (isCanceled || currentRound >= Rules::ROUNDS)
             break;
     } 
 
+    Utils::Log("\n- Thanks for playing! -\n");
     return 0;
 }
