@@ -76,7 +76,7 @@ public:
 	static bool IsExitConfirmed();
 	static void WaitForAnyKey();
 
-	inline static const bool isAutomatic = true;
+	inline static const bool isAutomatic = false;
 
 private:
 
