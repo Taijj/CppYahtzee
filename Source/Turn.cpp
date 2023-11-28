@@ -83,7 +83,7 @@ void Turn::RunScoring()
 	_renderer.RenderScoreInputs();
 		
 	Score::Kind kind;
-	const Command* com = Input::GetScoring(kind);
+	const Command* com = Input::GetScoring(kind, *_player);
 	if (com != nullptr)
 	{
 		Execute(*com);
@@ -112,7 +112,8 @@ void Turn::RunScoring()
 	_renderer.RenderRound();
 	_renderer.RenderTable();
 	
-	Input::WaitForAnyKey();
+	if(false == Input::isAutomatic)
+		Input::WaitForAnyKey();
 }
 
 

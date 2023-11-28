@@ -5,6 +5,9 @@
 
 const std::uint32_t Input::GetPlayers()
 {
+	if (isAutomatic)
+		return 4;
+
 	std::string input;	
 	while (true)
 	{
@@ -35,6 +38,9 @@ const std::uint32_t Input::GetPlayers()
 
 const Command Input::GetInitial()
 {
+	if (isAutomatic)
+		return THROW;
+
 	std::string input;
 	const Command* com = nullptr;
 	while (true)
@@ -53,6 +59,9 @@ const Command Input::GetInitial()
 
 const Command Input::GetPlaying()
 {
+	if (isAutomatic)
+		return THROW;
+
 	std::string input;
 	const Command* com = nullptr;
 	while (true)
@@ -105,8 +114,20 @@ const Command* Input::GetLocking(std::string& result)
 	}
 }
 
-const Command* Input::GetScoring(Score::Kind& result)
+const Command* Input::GetScoring(Score::Kind& result, Player &player)
 {
+	if (isAutomatic)
+	{
+		for (const Combo* c : COMBOS)
+		{
+			if (false == player.HasScore(c->Kind()))
+			{
+				result = c->Kind();
+				return nullptr;
+			}				
+		}
+	}
+
 	std::string input = "";
 	const Command* defaultCommand = nullptr;
 	while (true)

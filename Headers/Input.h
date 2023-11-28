@@ -2,6 +2,7 @@
 
 #include "Config.h"
 #include "Renderer.h"
+#include "Player.h"
 
 using Tutorial = std::vector<std::string>;
 using ScoreCommands = std::vector<std::pair<std::string, Score::Kind>>;
@@ -70,10 +71,12 @@ public:
 	static const Command GetInitial();
 	static const Command GetPlaying();
 	static const Command* GetLocking(std::string& result);
-	static const Command* GetScoring(Score::Kind& result);
+	static const Command* GetScoring(Score::Kind& result, Player &player);
 
 	static bool IsExitConfirmed();
 	static void WaitForAnyKey();
+
+	inline static const bool isAutomatic = true;
 
 private:
 

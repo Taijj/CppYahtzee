@@ -142,6 +142,16 @@ void Renderer::RenderFirstThrow() const
 	std::cout << YOUR_INPUT;
 }
 
+void Renderer::RenderFinalScores() const
+{
+	std::cout << "== Game Over ==" << std::endl;
+	std::cout << INDENT << Input::THROW.character << " - " << Input::THROW.description << std::endl;
+	std::cout << INDENT << Input::EXIT.character << " - " << Input::EXIT.description << std::endl;
+
+	std::cout << std::endl;
+	std::cout << YOUR_INPUT;
+}
+
 
 
 void Renderer::RenderRoundInputs() const

@@ -40,6 +40,7 @@ public:
 	void RenderRound() const;
 	void RenderTable() const;
 	void RenderFirstThrow() const;
+	void RenderFinalScores() const;
 
 	void RenderRoundInputs() const;
 	void RenderLockInputs() const;
