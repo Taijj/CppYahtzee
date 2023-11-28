@@ -36,7 +36,7 @@ public:
 	void UpdatePlayer(Player& value);
 
 
-
+	void RenderPlayers() const;
 	void RenderRound() const;
 	void RenderTable() const;
 	void RenderFirstThrow() const;
@@ -58,8 +58,7 @@ private:
 	inline static const std::string INVALID_INPUT = "# INVALID INPUT! Please try again: ";
 	inline static const std::string ALREADY_SCORED = "# You already scored this Combo! Try another: ";
 	inline static const char* CLEAR = "\033[2J\033[1;1H";	
-	inline static const std::string CLEAR_LINE = "\x1B[1A\x1B[2K";
-	inline static const char* ROLL_HEADLINE = "Player threw the dice...";
+	inline static const std::string CLEAR_LINE = "\x1B[1A\x1B[2K";	
 		
 	inline static constexpr std::uint32_t ENTRY_WIDTH = 15U;
 	

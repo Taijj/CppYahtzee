@@ -26,8 +26,12 @@ void Renderer::UpdatePlayer(Player& player)
 		if (dieIndex < Rules::DICE)
 		{
 			const Die& d = _dice[dieIndex];
+			std::string valueText = d.GetValue() != 0
+				? std::to_string(d.GetValue())
+				: "--";
+
 			*entry = d.Is(Die::State::Default)
-				? std::format("#{} - {}", d.GetId(), d.GetValue())
+				? std::format("#{} - {}", d.GetId(), valueText)
 				: "";
 		}
 		else
@@ -45,8 +49,12 @@ void Renderer::UpdatePlayer(Player& player)
 		if (dieIndex < Rules::DICE)
 		{
 			const Die& d = _dice[dieIndex];
+			std::string valueText = d.GetValue() != 0
+				? std::to_string(d.GetValue())
+				: "--";
+
 			*entry = d.Is(Die::State::Locked) || d.Is(Die::State::Selected)
-				? std::format("#{} - {}", d.GetId(), d.GetValue())
+				? std::format("#{} - {}", d.GetId(), valueText)
 				: "";
 		}
 		else
@@ -87,6 +95,14 @@ void Renderer::UpdatePlayer(Player& player)
 
 
 
+void Renderer::RenderPlayers() const
+{
+	std::cout << "== Welcome to Yahtzee! ==" << std::endl;
+	std::cout << std::endl;
+	std::cout << "How many players will play? Enter a number from 1 to 6." << std::endl;
+	std::cout << std::endl;
+	std::cout << YOUR_INPUT;
+}
 
 void Renderer::RenderRound() const
 {
@@ -98,9 +114,6 @@ void Renderer::RenderRound() const
 
 void Renderer::RenderTable() const
 {
-	std::cout << ROLL_HEADLINE << std::endl;
-	std::cout << std::endl;
-
 	for (std::size_t y = 0; y < TABLE_HEIGHT; ++y)
 	{
 		std::cout << INDENT;
@@ -110,6 +123,9 @@ void Renderer::RenderTable() const
 				<< std::left				
 				<< _playerTable[y][x];
 		}
+
+		if(y == 0)
+			std::cout << std::endl;
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
@@ -117,6 +133,7 @@ void Renderer::RenderTable() const
 
 void Renderer::RenderFirstThrow() const
 {	
+	std::cout << "# Start your round or exit the game, by typing in the following commands:" << std::endl;
 	std::cout << INDENT << Input::THROW.character << " - " << Input::THROW.description << std::endl;
 	std::cout << INDENT << Input::EXIT.character << " - " << Input::EXIT.description << std::endl;
 

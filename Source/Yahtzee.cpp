@@ -43,7 +43,7 @@ int main()
     Turn turn = Turn{ dice, renderer };    
     
 
-
+    renderer.RenderPlayers();
     const std::uint32_t playerCount = Input::GetPlayers();
     std::vector<Player> players = {};
     for (std::uint32_t i = 0; i < playerCount; ++i)

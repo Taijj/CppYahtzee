@@ -26,7 +26,10 @@ Turn::State Turn::Run()
 
 void Turn::RunInitial()
 {
+	_renderer.UpdatePlayer(*_player);
+
 	_renderer.RenderRound();
+	_renderer.RenderTable();
 	_renderer.RenderFirstThrow();
 
 	Execute(Input::GetInitial());	
