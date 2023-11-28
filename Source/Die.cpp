@@ -4,6 +4,11 @@
 void Die::Initialize(std::uint32_t id)
 {
 	_id = id;
+	Reset();
+}
+
+void Die::Reset()
+{	
 	_currentValue = 0;
 	_state = Default;
 }

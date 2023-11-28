@@ -6,8 +6,8 @@ void Turn::Start(Player& player)
 {
 	_player = &player;
 	_rerollsLeft = Rules::REROLLS;
-	for (Die &d : _dice)
-		d.Set(Die::Default);
+	for (Die& d : _dice)
+		d.Reset();
 	_state = Turn::Initial;
 }
 

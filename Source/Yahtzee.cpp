@@ -37,8 +37,8 @@ int main()
         dice[i].Initialize(i+1);
 
     //Uncomment for testing
-    TestScoring(dice, 100);
-    return 0;
+    /*TestScoring(dice, 100);
+    return 0;*/
 
     Renderer renderer = Renderer{ dice };
     Turn turn = Turn{ dice, renderer };    

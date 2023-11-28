@@ -18,8 +18,7 @@ public:
 
 	void Initialize(std::uint32_t id);
 
-
-
+	void Reset();
 	void Roll();
 	void Set(State state);
 	bool Is(State state) const;

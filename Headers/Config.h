@@ -36,6 +36,9 @@ namespace Rules
 	static constexpr std::uint32_t DICE = 5;
 	static constexpr std::uint32_t REROLLS = 3;
 
+	static constexpr std::uint32_t BONUS_THRESHOLD = 63;
+	static constexpr std::uint32_t BONUS_SCORE = 35;
+
 	static constexpr std::int32_t UNDEFINED = -1;
 };
 
