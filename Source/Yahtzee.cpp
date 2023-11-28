@@ -24,7 +24,8 @@ void TestScoring(GameDice& dice, std::uint32_t sampleCount)
                 rolls += std::format("{}, ", d.GetValue());
             }
 
-            Utils::Log(std::format("{} : {} -- {}", combo->Name(), combo->Score(dice), rolls));
+            Utils::Log(std::format("{} : {} -- {} --Max: {}",
+                combo->Name(), combo->Score(dice), rolls, combo->MaxPossibleScore()));
         }
     }
 }
@@ -36,8 +37,8 @@ int main()
         dice[i].Initialize(i+1);
 
     //Uncomment for testing
-    //TestScoring(dice, 100);
-    //return 0;
+    TestScoring(dice, 100);
+    return 0;
 
     Renderer renderer = Renderer{ dice };
     Turn turn = Turn{ dice, renderer };    
@@ -72,6 +73,8 @@ int main()
                 if (isCanceled || state == Turn::State::Completed)
                     break;
             }
+
+            // Check scores
 
             if (isCanceled)
                 break;

@@ -24,6 +24,7 @@ public:
 
     virtual Score::Kind Kind() const = 0;
     virtual std::uint32_t Score(GameDice& dice) const = 0;
+    virtual std::uint32_t MaxPossibleScore() const = 0;
 
 
 
@@ -68,6 +69,8 @@ public:
         return CountOfKind(dice, _value) * _value;
     }
 
+    std::uint32_t MaxPossibleScore() const final { return _value * Rules::DICE; }
+
 private:
     std::uint32_t _value;
 };
@@ -89,6 +92,13 @@ public:
                 return _fixedScore == 0 ? Sum(dice) : _fixedScore;
         }
         return 0;
+    }
+
+    std::uint32_t MaxPossibleScore() const final
+    {
+        return _fixedScore == 0
+            ? _value * Rules::DICE
+            : _fixedScore;
     }
 
 private:
@@ -127,6 +137,8 @@ public:
         return count == _length ? _score : 0;
     }
 
+    std::uint32_t MaxPossibleScore() const final { return _score; }
+
 private:
     const Score::Kind _kind;
     const std::uint32_t _length;
@@ -157,8 +169,13 @@ public:
                 found3 = true;            
         }
 
-        return found2 && found3 ? 25 : 0;
+        return found2 && found3 ? SCORE : 0;
     }    
+
+    std::uint32_t MaxPossibleScore() const final { return SCORE; }
+
+private:
+    inline static constexpr std::uint32_t SCORE = 25;
 };
 
 class ComboChance : public Combo
@@ -170,6 +187,8 @@ public:
     Score::Kind Kind() const final { return Score::Chance; }
 
     std::uint32_t Score(GameDice& dice) const final { return Sum(dice); }
+
+    std::uint32_t MaxPossibleScore() const final { return Rules::DICE * Rules::DIE_SIDES; }
 };
 
 
