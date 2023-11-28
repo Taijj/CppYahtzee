@@ -8,6 +8,11 @@ void Player::Reset()
 	_scoresByKind.clear();
 }
 
+std::uint32_t Player::GetId() const
+{
+	return _id;
+}
+
 void Player::SetScore(Score::Kind kind, std::uint32_t value)
 {
 	_scoresByKind[kind] = value;

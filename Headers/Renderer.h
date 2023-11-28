@@ -31,7 +31,7 @@ public:
 
 
 
-	void UpdateRound(std::uint32_t value);
+	void UpdateRound(std::uint32_t value, std::uint32_t playerId);
 	void UpdateRerollsLeft(std::uint32_t value);
 	void UpdatePlayer(Player& value);
 

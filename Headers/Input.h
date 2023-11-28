@@ -66,6 +66,7 @@ public:
 
 	Input() = delete;
 
+	static const std::uint32_t GetPlayers();
 	static const Command GetInitial();
 	static const Command GetPlaying();
 	static const Command* GetLocking(std::string& result);

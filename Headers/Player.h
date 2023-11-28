@@ -16,6 +16,7 @@ public:
 	~Player() = default;
 
 	void Reset();
+	std::uint32_t GetId() const;
 	bool HasScore(Score::Kind kind) const;
 
 	void SetScore(Score::Kind kind, std::uint32_t value);	

@@ -30,6 +30,7 @@ namespace Score
 
 namespace Rules
 {
+	static constexpr std::uint32_t MAX_PLAYERS = 6;
 	static constexpr std::uint32_t DIE_SIDES = 6;
 	static constexpr std::uint32_t ROUNDS = 13;
 	static constexpr std::uint32_t DICE = 5;

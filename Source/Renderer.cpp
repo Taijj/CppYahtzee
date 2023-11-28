@@ -5,9 +5,9 @@
 
 
 
-void Renderer::UpdateRound(std::uint32_t value)
+void Renderer::UpdateRound(std::uint32_t value, std::uint32_t playerId)
 {
-	_roundText = std::format("========= Round {} =========", value+1);
+	_roundText = std::format("========= Round {} - Player {} =========", value+1, playerId);
 }
 
 void Renderer::UpdateRerollsLeft(std::uint32_t value)

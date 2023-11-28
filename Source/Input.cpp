@@ -3,6 +3,36 @@
 #include "../Headers/Input.h"
 
 
+const std::uint32_t Input::GetPlayers()
+{
+	std::string input;	
+	while (true)
+	{
+		std::cin >> input;	
+		if (input.size() != 1)
+		{
+			Renderer::RenderInvalid();
+			continue;
+		}
+
+		std::uint32_t result = 0;
+		try
+		{
+			result = std::stoi(input);
+		}
+		catch (std::exception e)
+		{
+			Renderer::RenderInvalid();
+			continue;
+		}
+		
+		if (result < 1 || result > Rules::MAX_PLAYERS)
+			Renderer::RenderInvalid();
+		else
+			return result;
+	}
+}
+
 const Command Input::GetInitial()
 {
 	std::string input;
@@ -95,7 +125,6 @@ const Command* Input::GetScoring(Score::Kind& result)
 		defaultCommand = TryGetCommand(input);
 		if (defaultCommand != nullptr && *defaultCommand == EXIT)
 			return defaultCommand;
-
 
 		std::uint32_t commandLength = length == 1 ? 1 : 2;		
 		for (std::uint32_t i = 0; i < SCORE_COMMANDS.size(); ++i)
