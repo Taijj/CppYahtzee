@@ -62,9 +62,6 @@
     <ClInclude Include="TODO\Config\Config.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Global\Aliasses.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Global\Die\DieRenderer.h">
       <Filter>Headers</Filter>
     </ClInclude>

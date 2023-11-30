@@ -160,7 +160,6 @@
     <ClCompile Include="Yahtzee.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Global\Aliasses.h" />
     <ClInclude Include="TODO\Config\Combos.h" />
     <ClInclude Include="TODO\Config\Config.h" />
     <ClInclude Include="Global\Die\Die.h" />
