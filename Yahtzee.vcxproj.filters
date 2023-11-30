@@ -15,54 +15,58 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Yahtzee.cpp">
+    <ClCompile Include="Yahtzee.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Headers\Utils.h">
+    <ClCompile Include="TODO\Utils.h">
       <Filter>Headers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Turn.cpp">
+    <ClCompile Include="TODO\Source\Turn.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Renderer.cpp">
+    <ClCompile Include="TODO\Source\Renderer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Input.cpp">
+    <ClCompile Include="TODO\Source\Input.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Die.cpp">
+    <ClCompile Include="Global\Die\Die.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Player.cpp">
+    <ClCompile Include="TODO\Source\Player.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Global\Die\DieRenderer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\Die.h">
+    <ClInclude Include="Global\Die\Die.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Player.h">
+    <ClInclude Include="TODO\Player.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Renderer.h">
+    <ClInclude Include="TODO\Renderer.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Turn.h">
+    <ClInclude Include="TODO\Turn.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Combos.h">
+    <ClInclude Include="TODO\Config\Combos.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Input.h">
+    <ClInclude Include="TODO\Input.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Config.h">
+    <ClInclude Include="TODO\Config\Config.h">
       <Filter>Headers</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Other\Task.md">
-      <Filter>Other</Filter>
-    </None>
+    <ClInclude Include="Global\Aliasses.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Global\Die\DieRenderer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

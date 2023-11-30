@@ -150,25 +150,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Headers\Utils.h" />
-    <ClCompile Include="Source\Die.cpp" />
-    <ClCompile Include="Source\Input.cpp" />
-    <ClCompile Include="Source\Player.cpp" />
-    <ClCompile Include="Source\Renderer.cpp" />
-    <ClCompile Include="Source\Turn.cpp" />
-    <ClCompile Include="Source\Yahtzee.cpp" />
+    <ClCompile Include="Global\Die\DieRenderer.cpp" />
+    <ClCompile Include="TODO\Utils.h" />
+    <ClCompile Include="Global\Die\Die.cpp" />
+    <ClCompile Include="TODO\Source\Input.cpp" />
+    <ClCompile Include="TODO\Source\Player.cpp" />
+    <ClCompile Include="TODO\Source\Renderer.cpp" />
+    <ClCompile Include="TODO\Source\Turn.cpp" />
+    <ClCompile Include="Yahtzee.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Other\Task.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Headers\Combos.h" />
-    <ClInclude Include="Headers\Config.h" />
-    <ClInclude Include="Headers\Die.h" />
-    <ClInclude Include="Headers\Input.h" />
-    <ClInclude Include="Headers\Player.h" />
-    <ClInclude Include="Headers\Renderer.h" />
-    <ClInclude Include="Headers\Turn.h" />
+    <ClInclude Include="Global\Aliasses.h" />
+    <ClInclude Include="TODO\Config\Combos.h" />
+    <ClInclude Include="TODO\Config\Config.h" />
+    <ClInclude Include="Global\Die\Die.h" />
+    <ClInclude Include="Global\Die\DieRenderer.h" />
+    <ClInclude Include="TODO\Input.h" />
+    <ClInclude Include="TODO\Player.h" />
+    <ClInclude Include="TODO\Renderer.h" />
+    <ClInclude Include="TODO\Turn.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
