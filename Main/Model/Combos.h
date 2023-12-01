@@ -59,7 +59,7 @@ public:
     static uInt CountIn(uInt face, Roll& roll)
     {
         auto count = std::count_if(roll.begin(), roll.end(),
-            [face](const uInt& v) { return v == face; });
+            [face](const uInt& f) { return f == face; });
         return static_cast<uInt>(count);
     }
 
@@ -113,17 +113,17 @@ public:
     /// If the fixedScore parameter is not 0, it will be used as the score achievable
     /// by this Combo, otherwise the score will be the sum of all throw faces.
     /// </summary>
-    ComboOfKind(const char* name, Score::Kind kind, uInt face, uInt fixedScore = 0)
-        : Combo(name), _kind(kind), _face(face), _fixedScore(fixedScore)
+    ComboOfKind(const char* name, Score::Kind kind, uInt count, uInt fixedScore = 0)
+        : Combo(name), _kind(kind), _count(count), _fixedScore(fixedScore)
     {}
 
     Score::Kind Kind() const final { return _kind; }
 
     uInt Score(Roll& roll) const final
     {
-        for (uInt v : roll)
+        for (uInt f : roll)
         {
-            if (CountIn(v, roll) >= _face)
+            if (CountIn(f, roll) >= _count)
                 return _fixedScore == 0 ? SumUp(roll) : _fixedScore;
         }
         return 0;
@@ -132,13 +132,13 @@ public:
     uInt MaxPossibleScore() const final
     {
         return _fixedScore == 0
-            ? _face * Rules::DIE_COUNT
+            ? Rules::DIE_SIDES * Rules::DIE_COUNT
             : _fixedScore;
     }
 
 private:
     const Score::Kind _kind;
-    const uInt _face;
+    const uInt _count;
     const uInt _fixedScore;
 };
 
@@ -161,9 +161,9 @@ public:
         uInt count = 0;
         for (uInt i = 0; i < _length; ++i)
         {
-            for (uInt v : roll)
+            for (uInt f : roll)
             {
-                if (v == min + i)
+                if (f == min + i)
                 {
                     count++;
                     break;
@@ -199,9 +199,9 @@ public:
     {
         bool found3 = false;
         bool found2 = false;
-        for (uInt v : roll)
+        for (uInt f : roll)
         {
-            const uInt count = CountIn(v, roll);
+            const uInt count = CountIn(f, roll);
             if (count == 2 && !found2)
                 found2 = true;
 

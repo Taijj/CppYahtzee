@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <random>
 
+#include "../Global/Rules.h"
+
 /// <summary>
 /// Representation of one game die.
 /// </summary>
@@ -15,9 +17,7 @@ public:
 
 		ToBeLocked,	// Selected during the locking phase
 		Locked		// Locked in for scoring
-	};
-
-	inline static constexpr std::uint32_t SIDES = 6;
+	};	
 
 
 
@@ -49,7 +49,7 @@ public:
 private:
 		
 	inline static std::mt19937 GENERATOR{ std::random_device{}() };
-	inline static std::uniform_int_distribution<std::int32_t> DISTRIBUTION{ 1, SIDES };
+	inline static std::uniform_int_distribution<std::int32_t> DISTRIBUTION{ 1, Rules::DIE_SIDES };
 	static std::uint32_t GetRandomValue() { return DISTRIBUTION(GENERATOR); }
 
 	std::uint32_t _id;

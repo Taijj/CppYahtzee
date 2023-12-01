@@ -5,6 +5,8 @@
 
 #include <vector>
 #include <algorithm>
+#include <functional>
+#include "Helpers.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -27,13 +29,15 @@ namespace YahtzeeTest
 				d->Throw();
 
 			for (const auto& d : dice)
+			{
 				Assert::IsTrue(d->Face() != 0);
+			}
 		}
 
 		/// <summary>
 		/// Will the values resulting from a die throw be
 		/// 1. in a range from 1 to the set number of die sides, and
-		/// 2. given a large number of samples, will all possible values appear
+		/// 2. given a large number of samples, will all possible values appear?
 		/// </summary>
 		TEST_METHOD(DieValuesAreSensible)
 		{
@@ -47,7 +51,7 @@ namespace YahtzeeTest
 				d.Throw();
 
 				std::uint32_t value = d.Face();
-				Assert::IsTrue(value > 0 && value <= Die::SIDES);
+				Assert::IsTrue(value > 0 && value <= Rules::DIE_SIDES);
 
 				auto it = std::find(throws.begin(), throws.end(), value);
 				if (it == throws.end())
@@ -55,7 +59,7 @@ namespace YahtzeeTest
 			}
 
 			// Check if all possible values were thrown
-			for (std::uint32_t i = 1; i < Die::SIDES; i++)
+			for (std::uint32_t i = 1; i < Rules::DIE_SIDES; i++)
 			{
 				auto it = std::find(throws.begin(), throws.end(), i);
 				Assert::IsTrue(it != throws.end());
@@ -65,7 +69,7 @@ namespace YahtzeeTest
 
 
 		/// <summary>
-		/// Are all 13 combos defined in the right order with the right kind.
+		/// Are all 13 combos defined in the right order with the right kind?
 		/// </summary>
 		TEST_METHOD(CombosExist)
 		{			
@@ -74,6 +78,34 @@ namespace YahtzeeTest
 				auto& c = Model::COMBOS[i];				
 				Assert::IsTrue(c->Kind() == static_cast<Score::Kind>(i+1));
 			}
+		}
+
+		/// <summary>
+		/// Does the MaxPossibleScore() getter return the right values for all Combos?
+		/// </summary>
+		TEST_METHOD(CombosHaveCorrectPossibleScores)
+		{
+			auto check = [](Score::Kind k, std::uint32_t expected)
+			{
+				const auto is = Model::COMBOS.at(k - 1)->MaxPossibleScore();
+
+				Assert::IsTrue(is == expected, GetMessage(expected, is, k).c_str());
+			};
+
+			check(Score::Aces, 5);
+			check(Score::Twos, 10);
+			check(Score::Threes, 15);
+			check(Score::Fours, 20);
+			check(Score::Fives, 25);
+			check(Score::Sixes, 30);
+
+			check(Score::OfKind3, 30);
+			check(Score::OfKind4, 30);
+			check(Score::FullHouse, 25);
+			check(Score::StraightSmall, 30);
+			check(Score::StraightLarge, 40);
+			check(Score::Yahtzee, 50);
+			check(Score::Chance, 30);
 		}
 	};
 }

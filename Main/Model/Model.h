@@ -28,6 +28,8 @@ public:
 
 	static void Wake();
 
+
+
 	/// <summary>
 	/// Returns an array containing unique pointers to all needed Dies (the class)
 	/// for one game.
@@ -59,5 +61,5 @@ public:
 	};
 
 private:
-	inline static Dice _dice = Dice{ Die::SIDES };	
+	inline static Dice _dice = Dice{ Rules::DIE_SIDES };
 };

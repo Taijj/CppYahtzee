@@ -5,6 +5,30 @@
 
 int main()
 {	
+	auto check = [](Score::Kind k, std::uint32_t expected)
+		{
+			const auto is = Model::COMBOS.at(k - 1)->MaxPossibleScore();
+
+			std::cout << is << '\n';
+		};
+
+	check(Score::Aces, 5);
+	check(Score::Twos, 10);
+	check(Score::Threes, 15);
+	check(Score::Fours, 20);
+	check(Score::Fives, 25);
+	check(Score::Sixes, 30);
+
+	check(Score::OfKind3, 30);
+	check(Score::OfKind4, 30);
+	check(Score::FullHouse, 25);
+	check(Score::StraightSmall, 30);
+	check(Score::StraightLarge, 40);
+	check(Score::Yahtzee, 50);
+	check(Score::Chance, 30);
+
+
+
 	return 0;
 }
 

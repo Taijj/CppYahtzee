@@ -57,7 +57,7 @@ void Player::CalculateScores()
 
 void Player::SumUp(const Score::Kind from, const Score::Kind to)
 {
-	for (std::uint32_t i = from; i < to+1; ++i)
+	for (std::uint32_t i = from; i < to+1U; ++i)
 	{
 		std::uint32_t score;
 		bool hasScore = TryGetScore(static_cast<Score::Kind>(i), score);
