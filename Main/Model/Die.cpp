@@ -13,7 +13,7 @@ void Die::Throw()
 }
 
 void Die::Set(State state) { _state = state; }
-bool Die::Is(State state) const { return _state == state; }
+bool Die::IsIn(State state) const { return _state == state; }
 
 std::uint32_t Die::Id() const { return _id; }
 std::uint32_t Die::Value() const { return _currentValue; }

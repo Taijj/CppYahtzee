@@ -18,51 +18,24 @@
     <ClCompile Include="Yahtzee.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="TODO\Utils.h">
-      <Filter>Headers</Filter>
-    </ClCompile>
-    <ClCompile Include="TODO\Source\Turn.cpp">
+    <ClCompile Include="Model\Die.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="TODO\Source\Renderer.cpp">
+    <ClCompile Include="View\View.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="TODO\Source\Input.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Global\Die\Die.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="TODO\Source\Player.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Global\Die\DieRenderer.cpp">
+    <ClCompile Include="Model\Model.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Global\Die\Die.h">
+    <ClInclude Include="Model\Die.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="TODO\Player.h">
+    <ClInclude Include="Model\Model.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="TODO\Renderer.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="TODO\Turn.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="TODO\Config\Combos.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="TODO\Input.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="TODO\Config\Config.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Global\Die\DieRenderer.h">
+    <ClInclude Include="View\View.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

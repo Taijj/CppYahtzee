@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <SuppressStartupBanner>false</SuppressStartupBanner>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
@@ -150,24 +150,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Global\Die\DieRenderer.cpp" />
-    <ClCompile Include="TODO\Utils.h" />
-    <ClCompile Include="Global\Die\Die.cpp" />
-    <ClCompile Include="TODO\Source\Input.cpp" />
-    <ClCompile Include="TODO\Source\Player.cpp" />
-    <ClCompile Include="TODO\Source\Renderer.cpp" />
-    <ClCompile Include="TODO\Source\Turn.cpp" />
+    <ClCompile Include="Model\Model.cpp" />
+    <ClCompile Include="Model\Die.cpp" />
+    <ClCompile Include="View\View.cpp" />
     <ClCompile Include="Yahtzee.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TODO\Config\Combos.h" />
-    <ClInclude Include="TODO\Config\Config.h" />
-    <ClInclude Include="Global\Die\Die.h" />
-    <ClInclude Include="Global\Die\DieRenderer.h" />
-    <ClInclude Include="TODO\Input.h" />
-    <ClInclude Include="TODO\Player.h" />
-    <ClInclude Include="TODO\Renderer.h" />
-    <ClInclude Include="TODO\Turn.h" />
+    <ClInclude Include="Model\Model.h" />
+    <ClInclude Include="Model\Die.h" />
+    <ClInclude Include="View\View.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
