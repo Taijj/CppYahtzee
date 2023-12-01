@@ -2,16 +2,19 @@
 #include <cstdint>
 #include <random>
 
+/// <summary>
+/// Representation of one game die.
+/// </summary>
 class Die
 {
 public:
 
 	enum State
 	{
-		Default = 0,
+		Unused = 0,	// Not thrown, yet
 
-		Selected,
-		Locked
+		ToBeLocked,	// Selected during the locking phase
+		Locked		// Locked in for scoring
 	};
 
 	inline static constexpr std::uint32_t SIDES = 6;
@@ -21,7 +24,7 @@ public:
 	Die() = default;
 
 	Die(std::uint32_t id) : 
-		_id(id), _currentValue(0), _state(Default)
+		_id(id), _face(0), _state(Unused)
 	{}
 
 	~Die() = default;
@@ -32,7 +35,11 @@ public:
 	void Throw();
 
 	std::uint32_t Id() const;
-	std::uint32_t Value() const;
+
+	/// <summary>
+	/// Returns the value of the side facing up
+	/// </summary>	
+	std::uint32_t Face() const;
 
 	void Set(State state);
 	bool IsIn(State state) const;
@@ -47,6 +54,6 @@ private:
 
 	std::uint32_t _id;
 
-	std::uint32_t _currentValue;
+	std::uint32_t _face;
 	State _state;
 };

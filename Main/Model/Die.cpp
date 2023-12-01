@@ -2,18 +2,18 @@
 
 void Die::Reset()
 {	
-	_currentValue = 0;
-	_state = Default;
+	_face = 0;
+	_state = Unused;
 }
 
 void Die::Throw()
 {
-	_state = Default;
-	_currentValue = GetRandomValue();
+	_state = Unused;
+	_face = GetRandomValue();
 }
 
 void Die::Set(State state) { _state = state; }
 bool Die::IsIn(State state) const { return _state == state; }
 
 std::uint32_t Die::Id() const { return _id; }
-std::uint32_t Die::Value() const { return _currentValue; }
+std::uint32_t Die::Face() const { return _face; }

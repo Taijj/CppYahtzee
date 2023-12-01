@@ -27,6 +27,9 @@
     <ClCompile Include="Model\Model.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Player.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\Die.h">
@@ -41,7 +44,13 @@
     <ClInclude Include="Model\Combos.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Rules.h">
+    <ClInclude Include="Global\Rules.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Player.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Global\ScoreKinds.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,38 +5,25 @@
 #include <algorithm>
 #include <numeric>
 
-#include "Rules.h"
+#include "../Global/Rules.h"
+#include "../Global/ScoreKinds.h"
 
 
 
+/// <summary>
+/// Base class for all achieveable Combos in the game.
+/// 
+/// Concepts:
+///     Roll - The result of one throw of all game dice in an array of face values
+///     Face - The value of the showing up side of a die
+/// </summary>
 class Combo
 {
 public:
 
     using uInt = std::uint32_t;
-    using RolledValues = std::array<uInt, Rules::DIE_COUNT>;
-
-    enum ComboKind
-    {
-        Undefined = 0,
-
-        Aces,
-        Twos,
-        Threes,
-        Fours,
-        Fives,
-        Sixes,
-
-        OfKind3,
-        OfKind4,
-        FullHouse,
-        StraightSmall,
-        StraightLarge,
-        Yahtzee,
-
-        Chance
-    };
-
+    using Roll = std::array<uInt, Rules::DIE_COUNT>;
+    
 
     
     Combo(const char* name) : _name(name)
@@ -51,22 +38,37 @@ public:
     
 
 
-    virtual ComboKind Kind() const = 0;
-    virtual uInt Score(RolledValues& values) const = 0;
+    virtual Score::Kind Kind() const = 0;
+
+    /// <summary>
+    /// Returns the score the given roll would achieve.
+    /// </summary>
+    virtual uInt Score(Roll& roll) const = 0;
+
+    /// <summary>
+    /// Returns the highest score that could be achieved,
+    /// with a perfect Roll for this Combo.
+    /// </summary>
     virtual uInt MaxPossibleScore() const = 0;
 
 
 
-    static uInt CountIn(uInt value, RolledValues& values)
+    /// <summary>
+    /// Counts how often the given face occurs in the given roll.
+    /// </summary>
+    static uInt CountIn(uInt face, Roll& roll)
     {
-        auto count = std::count_if(values.begin(), values.end(),
-            [value](const uInt& v) { return v == value; });
+        auto count = std::count_if(roll.begin(), roll.end(),
+            [face](const uInt& v) { return v == face; });
         return static_cast<uInt>(count);
     }
 
-    static uInt SumUp(RolledValues& values)
+    /// <summary>
+    /// Returns the sum of all faces in the given roll.
+    /// </summary>
+    static uInt SumUp(Roll& roll)
     {
-        return std::accumulate(values.begin(), values.end(), 0);
+        return std::accumulate(roll.begin(), roll.end(), 0);
     }
 
 private:
@@ -75,42 +77,54 @@ private:
 
 
 
+/// <summary>
+/// Used for Combos that count the number of same faces, e.g. Aces
+/// "Face": One side of a die showing a certain number of dots.
+/// </summary>
 class ComboFace : public Combo
 {
 public:
-    ComboFace(const char* name, uInt value) : Combo(name)
+    ComboFace(const char* name, uInt face) : Combo(name)
     {
-        _value = std::clamp(value, 1U, Rules::DIE_SIDES);
+        _face = std::clamp(face, 1U, Rules::DIE_SIDES);
     }
 
-    ComboKind Kind() const final { return static_cast<ComboKind>(_value); }
+    Score::Kind Kind() const final { return static_cast<Score::Kind>(_face); }
 
-    uInt Score(RolledValues& values) const final
+    uInt Score(Roll& roll) const final
     {
-        return CountIn(_value, values) * _value;
+        return CountIn(_face, roll) * _face;
     }
 
-    uInt MaxPossibleScore() const final { return _value * Rules::DIE_COUNT; }
+    uInt MaxPossibleScore() const final { return _face * Rules::DIE_COUNT; }
 
 private:
-    uInt _value;
+    uInt _face;
 };
 
+/// <summary>
+/// Used for Combos that require a certain number of same faces in a roll, e.g. 4 of a Kind, Yahtzee
+/// </summary>
 class ComboOfKind : public Combo
 {
 public:
-    ComboOfKind(const char* name, ComboKind kind, uInt value, uInt fixedScore = 0)
-        : Combo(name), _kind(kind), _value(value), _fixedScore(fixedScore)
+
+    /// <summary>
+    /// If the fixedScore parameter is not 0, it will be used as the score achievable
+    /// by this Combo, otherwise the score will be the sum of all throw faces.
+    /// </summary>
+    ComboOfKind(const char* name, Score::Kind kind, uInt face, uInt fixedScore = 0)
+        : Combo(name), _kind(kind), _face(face), _fixedScore(fixedScore)
     {}
 
-    ComboKind Kind() const final { return _kind; }
+    Score::Kind Kind() const final { return _kind; }
 
-    uInt Score(RolledValues& values) const final
+    uInt Score(Roll& roll) const final
     {
-        for (uInt v : values)
+        for (uInt v : roll)
         {
-            if (CountIn(v, values) >= _value)
-                return _fixedScore == 0 ? SumUp(values) : _fixedScore;
+            if (CountIn(v, roll) >= _face)
+                return _fixedScore == 0 ? SumUp(roll) : _fixedScore;
         }
         return 0;
     }
@@ -118,33 +132,36 @@ public:
     uInt MaxPossibleScore() const final
     {
         return _fixedScore == 0
-            ? _value * Rules::DIE_COUNT
+            ? _face * Rules::DIE_COUNT
             : _fixedScore;
     }
 
 private:
-    const ComboKind _kind;
-    const uInt _value;
+    const Score::Kind _kind;
+    const uInt _face;
     const uInt _fixedScore;
 };
 
+/// <summary>
+/// Used for straight Combos, e.g. Large Straight
+/// </summary>
 class ComboStraight : public Combo
 {
 public:
-    ComboStraight(const char* name, ComboKind kind, uInt length, uInt score)
+    ComboStraight(const char* name, Score::Kind kind, uInt length, uInt score)
         : Combo(name), _kind(kind), _length(length), _score(score)
     {}
 
-    ComboKind Kind() const final { return _kind; }
+    Score::Kind Kind() const final { return _kind; }
 
-    uInt Score(RolledValues& values) const final
+    uInt Score(Roll& roll) const final
     {
-        const uInt min = *std::min(values.begin(), values.end());
+        const uInt min = *std::min(roll.begin(), roll.end());
 
         uInt count = 0;
         for (uInt i = 0; i < _length; ++i)
         {
-            for (uInt v : values)
+            for (uInt v : roll)
             {
                 if (v == min + i)
                 {
@@ -160,28 +177,31 @@ public:
     uInt MaxPossibleScore() const final { return _score; }
 
 private:
-    const ComboKind _kind;
+    const Score::Kind _kind;
     const uInt _length;
     const uInt _score;
 };
 
 
 
+/// <summary>
+/// A Combo implementing the logic for a Full House
+/// </summary>
 class ComboFullHouse : public Combo
 {
 public:
     ComboFullHouse(const char* name) : Combo(name)
     {}
 
-    ComboKind Kind() const final { return FullHouse; }
+    Score::Kind Kind() const final { return Score::FullHouse; }
 
-    uInt Score(RolledValues& values) const final
+    uInt Score(Roll& roll) const final
     {
         bool found3 = false;
         bool found2 = false;
-        for (uInt v : values)
+        for (uInt v : roll)
         {
-            const uInt count = CountIn(v, values);
+            const uInt count = CountIn(v, roll);
             if (count == 2 && !found2)
                 found2 = true;
 
@@ -198,15 +218,18 @@ private:
     inline static constexpr uInt SCORE = 25;
 };
 
+/// <summary>
+/// A Combo implementing the logic for a Chance.
+/// </summary>
 class ComboChance : public Combo
 {
 public:
     ComboChance(const char* name) : Combo(name)
     {}
 
-    ComboKind Kind() const final { return Chance; }
+    Score::Kind Kind() const final { return Score::Chance; }
 
-    uInt Score(RolledValues& values) const final { return SumUp(values); }
+    uInt Score(Roll& roll) const final { return SumUp(roll); }
 
     uInt MaxPossibleScore() const final { return Rules::DIE_COUNT * Rules::DIE_SIDES; }
 };

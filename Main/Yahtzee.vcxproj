@@ -152,12 +152,15 @@
   <ItemGroup>
     <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Model\Die.cpp" />
+    <ClCompile Include="Model\Player.cpp" />
     <ClCompile Include="View\View.cpp" />
     <ClCompile Include="Yahtzee.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Global\ScoreKinds.h" />
     <ClInclude Include="Model\Combos.h" />
-    <ClInclude Include="Model\Rules.h" />
+    <ClInclude Include="Model\Player.h" />
+    <ClInclude Include="Global\Rules.h" />
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Model\Die.h" />
     <ClInclude Include="View\View.h" />

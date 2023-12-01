@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CppUnitTest.h"
+
 #include "../Main/Model/Model.h"
 
 #include <vector>
@@ -26,7 +27,7 @@ namespace YahtzeeTest
 				d->Throw();
 
 			for (const auto& d : dice)
-				Assert::IsTrue(d->Value() != 0);
+				Assert::IsTrue(d->Face() != 0);
 		}
 
 		/// <summary>
@@ -45,7 +46,7 @@ namespace YahtzeeTest
 			{
 				d.Throw();
 
-				std::uint32_t value = d.Value();
+				std::uint32_t value = d.Face();
 				Assert::IsTrue(value > 0 && value <= Die::SIDES);
 
 				auto it = std::find(throws.begin(), throws.end(), value);
@@ -70,8 +71,8 @@ namespace YahtzeeTest
 		{			
 			for (std::uint32_t i = 0; i < Rules::ROUND_COUNT; ++i)
 			{
-				auto& c = Model::COMBOS[i];
-				Assert::IsTrue(c->Kind() == static_cast<Combo::ComboKind>(i+1));
+				auto& c = Model::COMBOS[i];				
+				Assert::IsTrue(c->Kind() == static_cast<Score::Kind>(i+1));
 			}
 		}
 	};
