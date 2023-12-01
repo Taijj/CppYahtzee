@@ -174,7 +174,7 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CppYahtzee\Yahtzee.vcxproj">
+    <ProjectReference Include="..\Main\Yahtzee.vcxproj">
       <Project>{0f660b9f-56ad-4d12-8097-8eb4af901608}</Project>
     </ProjectReference>
   </ItemGroup>

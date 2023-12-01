@@ -38,5 +38,11 @@
     <ClInclude Include="View\View.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Combos.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Rules.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

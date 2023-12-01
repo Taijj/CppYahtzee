@@ -1,17 +1,10 @@
 #include "Model/Model.h"
 //#include "View/View.h"
 
+#include <iostream>
+
 int main()
 {	
-	Model::Wake();
-	Model::Dice& dice = Model::GetDice();
-
-	for (const auto& d : dice)
-	{
-		d->Throw();
-	}
-
-
 	return 0;
 }
 

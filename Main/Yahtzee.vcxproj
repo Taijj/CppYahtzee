@@ -156,6 +156,8 @@
     <ClCompile Include="Yahtzee.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Model\Combos.h" />
+    <ClInclude Include="Model\Rules.h" />
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Model\Die.h" />
     <ClInclude Include="View\View.h" />

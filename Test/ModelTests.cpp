@@ -23,7 +23,7 @@ namespace YahtzeeTest
 			Model::Dice& dice = Model::GetDice();
 
 			for (const auto& d : dice)
-				d->Throw();			
+				d->Throw();
 
 			for (const auto& d : dice)
 				Assert::IsTrue(d->Value() != 0);
@@ -58,6 +58,20 @@ namespace YahtzeeTest
 			{
 				auto it = std::find(throws.begin(), throws.end(), i);
 				Assert::IsTrue(it != throws.end());
+			}
+		}
+
+
+
+		/// <summary>
+		/// Are all 13 combos defined in the right order with the right kind.
+		/// </summary>
+		TEST_METHOD(CombosExist)
+		{			
+			for (std::uint32_t i = 0; i < Rules::ROUND_COUNT; ++i)
+			{
+				auto& c = Model::COMBOS[i];
+				Assert::IsTrue(c->Kind() == static_cast<Combo::ComboKind>(i+1));
 			}
 		}
 	};
