@@ -30,6 +30,12 @@
     <ClCompile Include="Model\Player.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Controller\Game.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\Turn.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\Die.h">
@@ -51,6 +57,12 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Global\ScoreKinds.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\Game.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\Turn.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

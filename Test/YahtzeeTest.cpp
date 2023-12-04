@@ -12,7 +12,7 @@ namespace YahtzeeTest
 		
 		TEST_METHOD(TestMethod1)
 		{
-			Model::Wake();
+			Model::Wake(1);
 			Assert::IsTrue(true);
 		}
 	};	

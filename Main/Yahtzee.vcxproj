@@ -150,6 +150,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Controller\Game.cpp" />
+    <ClCompile Include="Controller\Turn.cpp" />
     <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Model\Die.cpp" />
     <ClCompile Include="Model\Player.cpp" />
@@ -157,6 +159,8 @@
     <ClCompile Include="Yahtzee.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Controller\Game.h" />
+    <ClInclude Include="Controller\Turn.h" />
     <ClInclude Include="Global\ScoreKinds.h" />
     <ClInclude Include="Model\Combos.h" />
     <ClInclude Include="Model\Player.h" />

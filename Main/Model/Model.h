@@ -8,6 +8,7 @@
 #include "../Global/ScoreKinds.h"
 #include "Die.h"
 #include "Combos.h"	
+#include "Player.h"
 
 
 
@@ -21,12 +22,13 @@ public:
 		
 	using Dice = std::vector<std::unique_ptr<Die>>;
 	using Combos = std::array<std::unique_ptr<Combo>, Rules::ROUND_COUNT>;
+	using Players = std::vector<std::unique_ptr<Player>>;
 
 	
 	
 	Model() = delete;	
 
-	static void Wake();
+	static void Wake(std::uint32_t playerCount);
 
 
 
@@ -35,6 +37,13 @@ public:
 	/// for one game.
 	/// </summary>
 	static Dice& GetDice();
+
+	/// <summary>
+	/// Returns an array containing unique pointers to all needed Players (the class)
+	/// for one game.
+	/// </summary>
+	static Players& GetPlayers();
+
 
 
 	/// <summary>
@@ -61,5 +70,7 @@ public:
 	};
 
 private:
+
 	inline static Dice _dice = Dice{ Rules::DIE_SIDES };
+	inline static Players _players = Players{ Rules::MAX_PLAYER_COUNT };
 };

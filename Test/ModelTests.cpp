@@ -22,7 +22,7 @@ namespace YahtzeeTest
 		/// </summary>
 		TEST_METHOD(DiceCanBeThrown)
 		{
-			Model::Wake();			
+			Model::Wake(1);
 			Model::Dice& dice = Model::GetDice();
 
 			for (const auto& d : dice)
