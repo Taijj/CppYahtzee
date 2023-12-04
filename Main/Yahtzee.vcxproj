@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <SuppressStartupBanner>false</SuppressStartupBanner>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Controller\Game.cpp" />
+    <ClCompile Include="Controller\Input.cpp" />
     <ClCompile Include="Controller\Turn.cpp" />
     <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Model\Die.cpp" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller\Game.h" />
+    <ClInclude Include="Controller\Input.h" />
     <ClInclude Include="Controller\Turn.h" />
     <ClInclude Include="Global\ScoreKinds.h" />
     <ClInclude Include="Model\Combos.h" />

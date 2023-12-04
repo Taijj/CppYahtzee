@@ -15,6 +15,7 @@ public:
 	{
 		Unused = 0,	// Not thrown, yet
 
+		Thrown,		// Thrown
 		ToBeLocked,	// Selected during the locking phase
 		Locked		// Locked in for scoring
 	};	

@@ -38,7 +38,7 @@ void Game::RunTurn()
 
 bool Game::IsRoundCutShort()
 {
-    const auto &players = Model::GetPlayers();
+    const auto& players = Model::GetPlayers();
     std::uint32_t playerCount = static_cast<std::uint32_t>(players.size());
     if (playerCount <= 1)
         return false;

@@ -1,14 +1,17 @@
 #include "Turn.h"
 
 #include "../Model/Model.h"
-#include "../Global/Rules.h"
 
 
+
+#pragma region Main
 void Turn::Start(std::uint32_t playerId)
 {	
-	_rerollsLeft = Rules::REROLL_COUNT;
 	for (const auto& d : Model::GetDice())
 		d->Reset();
+	
+	_currentPlayerId = playerId;
+	_rerollsLeft = Rules::REROLL_COUNT;
 	_state = Turn::Initial;
 }
 
@@ -25,17 +28,20 @@ void Turn::Run()
 
 bool Turn::IsRunning() { return _state != Completed && _state != Canceled; }
 bool Turn::WasCanceled() { return _state == Canceled; }
+#pragma endregion
 
 
+
+#pragma region Phases
 void Turn::RunInitial()
 {
 	//_renderer.UpdatePlayer(*_player);
 
 	//_renderer.RenderRound();
 	//_renderer.RenderTable();
-	//_renderer.RenderFirstThrow();
+	//_renderer.RenderFirstThrow();	
 
-	//Execute(Input::GetInitial());	
+	Input::WaitForAnyKey();
 }
 
 void Turn::RunPlaying()
@@ -44,7 +50,13 @@ void Turn::RunPlaying()
 	//_renderer.RenderTable();
 	//_renderer.RenderRoundInputs();
 
-	//Execute(Input::GetPlaying());
+	const Command* com = nullptr;
+	while (com == nullptr)
+	{
+		com = Input::ForGame();
+	}
+
+	Execute(*com);
 }
 
 void Turn::RunLocking()
@@ -52,29 +64,44 @@ void Turn::RunLocking()
 	//_renderer.RenderRound();
 	//_renderer.RenderTable();
 	//_renderer.RenderLockInputs();
+		
 
-	//std::string sub = "";
-	//const Command* com = Input::GetLocking(sub);
-	//if (com != nullptr)
-	//{
-		//Execute(*com);
-		//return;
-	//}
 
-	//for (const char c : sub)
-	//{
-	//	std::uint32_t id = c - '0'; // Char to digit conversion
-	//	Die& d = *std::find_if(_dice.begin(), _dice.end(), [&](const Die& d) { return d.GetId() == id; });
+	std::vector<std::uint32_t> ids;
+	while(true) // until a valid input was made
+	{	
+		ids.clear();
+		const Command* com = Input::ForLocking(ids);
 
-	//	if (d.Is(Die::Locked))
-	//	{
-	//		// TODO
-	//		// Utils::Log("Cannot modify Die #" + std::to_string(d.GetId()) + "! It is locked for this turn.");
-	//		continue;
-	//	}
+		// Default game command was put in
+		if (com != nullptr)
+		{
+			Execute(*com);
+			break;
+		}
+		
+		// 1 or more dice were selected
+		if (ids.size() > 0)
+			break;
 
-	//	d.Set(d.Is(Die::Selected) ? Die::Default : Die::Selected);
-	//}
+		// TODO: Invalid
+	}	
+	
+
+
+	for (const std::uint32_t id : ids)
+	{
+		const auto& d = Model::GetDice().at(id - 1);
+
+		if (d->IsIn(Die::Locked))
+		{
+			// TODO: Warning
+			continue;
+		}
+
+		Die::State state = d->IsIn(Die::Thrown) ? Die::ToBeLocked : Die::Thrown;
+		d->Set(state);
+	}
 
 	//_renderer.UpdatePlayer(*_player);
 }
@@ -84,62 +111,77 @@ void Turn::RunScoring()
 	//_renderer.RenderRound();
 	//_renderer.RenderTable();
 	//_renderer.RenderScoreInputs();
-	//	
-	//Score::Kind kind;
-	//const Command* com = Input::GetScoring(kind, *_player);
-	//if (com != nullptr)
-	//{
-	//	Execute(*com);
-	//	return;
-	//}
 
-	//if (_player->HasScore(kind))
-	//{
-	//	// TODO
-	//	// Utils::Log("Cannot score as {kind} since you already scored there.");
-	//	return;
-	//}
-	//
-	//for (const Combo* c : COMBOS)
-	//{
-	//	if (c->Kind() == kind)
-	//	{
-	//		std::uint32_t score = c->Score(_dice);
-	//		_player->SetScore(kind, score);
-	//		break;
-	//	}
-	//}
+	const auto& player = Model::GetPlayers().at(_currentPlayerId);
+		
+	Score::Kind kind;
+	while (true) // Until a valid input was made
+	{
+		const Command* com = Input::ForScoring(kind);		
+		
+		// Default game command was put in
+		if (com != nullptr)
+		{
+			Execute(*com);
+			break;
+		}
+		
+		// A kind was selected that the player did not score, yet
+		if (kind != Score::Undefined)
+		{
+			std::uint32_t _;
+			if (!player->TryGetScore(kind, _))
+				break;
 
-	//_state = Turn::Completed;
+			// TODO: Warnings
+		}
+
+		// TODO: Invalid
+	}
+		
+
+
+	for(const auto& c : Model::COMBOS)
+	{
+		if (c->Kind() != kind)
+			continue;
+		
+		player->SetScore(kind, c->Score(_currentRoll));		
+		break;
+	}
+
+	_state = Turn::Completed;
 	//_renderer.UpdatePlayer(*_player);
 	//_renderer.RenderRound();
 	//_renderer.RenderTable();
-	//
-	//if(false == Input::isAutomatic)
-	//	Input::WaitForAnyKey();
+	
+	if(false == Input::isAutomatic)
+		Input::WaitForAnyKey();
 }
+#pragma endregion
 
 
 
-//void Turn::Execute(const Command command)
-//{
-//	if (command == Input::THROW)
-//	{
-//		RollDice();
-//	}
-//	else if (command == Input::EXIT)
-//	{
-//		ExitGame();
-//	}
-//	else if (command == Input::LOCK)
-//	{
-//		_state = Turn::Locking;
-//	}
-//	else if (command == Input::SCORE)
-//	{
-//		_state = Turn::Scoring;
-//	}
-//}
+#pragma region Helpers
+void Turn::Execute(const Command& command)
+{
+	if (command == Input::THROW)
+	{
+		ThrowDice();
+	}
+	else if (command == Input::EXIT)
+	{
+		ExitGame();
+	}
+	else if (command == Input::LOCK)
+	{
+		_state = Turn::Locking;
+	}
+	else if (command == Input::SCORE)
+	{
+		_state = Turn::Scoring;
+	}
+}
 
 void Turn::ThrowDice()
 {
@@ -150,6 +192,8 @@ void Turn::ThrowDice()
 
 		if (!d->IsIn(Die::Locked))
 			d->Throw();
+
+		_currentRoll[d->Id()] = d->Face();
 	}
 	
 	--_rerollsLeft;
@@ -161,7 +205,15 @@ void Turn::ThrowDice()
 
 void Turn::ExitGame()
 {
-	/*_renderer.RenderExitConfirmation();
-	if (Input::IsExitConfirmed())
-		_state = Turn::Canceled;*/
+	//_renderer.RenderExitConfirmation();	
+
+	const Command* com = nullptr;
+	while (com == nullptr)
+	{
+		com = Input::ForConfirmation();
+	}
+	
+	if(*com == Input::YES)
+		_state = Turn::Canceled;
 }
+#pragma endregion

@@ -8,7 +8,7 @@ void Die::Reset()
 
 void Die::Throw()
 {
-	_state = Unused;
+	_state = Thrown;
 	_face = GetRandomValue();
 }
 

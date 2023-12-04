@@ -36,6 +36,9 @@
     <ClCompile Include="Controller\Turn.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Controller\Input.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\Die.h">
@@ -63,6 +66,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Controller\Turn.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\Input.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
