@@ -26,9 +26,7 @@ int main()
 	check(Score::StraightLarge, 40);
 	check(Score::Yahtzee, 50);
 	check(Score::Chance, 30);
-
-
-
+	
 	return 0;
 }
 

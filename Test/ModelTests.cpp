@@ -87,9 +87,10 @@ namespace YahtzeeTest
 		{
 			auto check = [](Score::Kind k, std::uint32_t expected)
 			{
-				const auto is = Model::COMBOS.at(k - 1)->MaxPossibleScore();
+				const auto& c = Model::COMBOS.at(k - 1);
+				const auto is = c->MaxPossibleScore();
 
-				Assert::IsTrue(is == expected, GetMessage(expected, is, k).c_str());
+				Assert::IsTrue(is == expected, GetMessage(expected, is, static_cast<std::uint32_t>(k)).c_str());
 			};
 
 			check(Score::Aces, 5);
@@ -106,6 +107,46 @@ namespace YahtzeeTest
 			check(Score::StraightLarge, 40);
 			check(Score::Yahtzee, 50);
 			check(Score::Chance, 30);
+		}
+
+		/// <summary>
+		/// Do the Combos from Aces to Sixes return the right score values?
+		/// </summary>
+		TEST_METHOD(FaceCombosCorrectlyScore)
+		{
+			using Roll = std::array<std::uint32_t, Rules::DIE_COUNT>;
+
+			auto check = [](Roll r, const Combo& c, std::uint32_t expected)
+			{
+				std::uint32_t score = c.Score(r);				
+				Assert::IsTrue(score == expected,
+					GetMessage(expected, score, static_cast<std::uint32_t>(c.Kind())).c_str());
+			};
+
+			const auto& aces = Model::COMBOS.at(0);
+			const auto& twos = Model::COMBOS.at(1);
+			const auto& threes = Model::COMBOS.at(2);
+			const auto& fours = Model::COMBOS.at(3);
+			const auto& fives = Model::COMBOS.at(4);
+			const auto& sixes = Model::COMBOS.at(5);
+
+			Roll r1 = { 1, 2, 3, 4, 5 };
+			check(r1, *aces, 1);
+			check(r1, *twos, 2);
+			check(r1, *threes, 3);
+			check(r1, *fours, 4);
+			check(r1, *fives, 5);
+			check(r1, *sixes, 0);
+
+			Roll r2 = { 3, 2, 3, 4, 3 };
+			check(r2, *aces, 0);
+			check(r2, *twos, 2);
+			check(r2, *threes, 9);
+			check(r2, *fours, 4);
+			check(r2, *fives, 0);
+			check(r2, *sixes, 0);
+
+			// TODO: More tests
 		}
 	};
 }

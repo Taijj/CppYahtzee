@@ -26,12 +26,12 @@ public:
     
 
     
-    Combo(const char* name) : _name(name)
+    Combo(const std::string name) : _name(name)
     {}
 
     ~Combo() = default;
 
-    const char* Name() const
+    const std::string Name() const
     {
         return _name;
     }            
@@ -72,7 +72,7 @@ public:
     }
 
 private:
-    const char* _name;
+    const std::string _name;
 };
 
 
@@ -84,7 +84,7 @@ private:
 class ComboFace : public Combo
 {
 public:
-    ComboFace(const char* name, uInt face) : Combo(name)
+    ComboFace(const std::string name, uInt face) : Combo(name)
     {
         _face = std::clamp(face, 1U, Rules::DIE_SIDES);
     }
@@ -113,7 +113,7 @@ public:
     /// If the fixedScore parameter is not 0, it will be used as the score achievable
     /// by this Combo, otherwise the score will be the sum of all throw faces.
     /// </summary>
-    ComboOfKind(const char* name, Score::Kind kind, uInt count, uInt fixedScore = 0)
+    ComboOfKind(const std::string name, Score::Kind kind, uInt count, uInt fixedScore = 0)
         : Combo(name), _kind(kind), _count(count), _fixedScore(fixedScore)
     {}
 
@@ -148,7 +148,7 @@ private:
 class ComboStraight : public Combo
 {
 public:
-    ComboStraight(const char* name, Score::Kind kind, uInt length, uInt score)
+    ComboStraight(const std::string name, Score::Kind kind, uInt length, uInt score)
         : Combo(name), _kind(kind), _length(length), _score(score)
     {}
 
@@ -190,7 +190,7 @@ private:
 class ComboFullHouse : public Combo
 {
 public:
-    ComboFullHouse(const char* name) : Combo(name)
+    ComboFullHouse(const std::string name) : Combo(name)
     {}
 
     Score::Kind Kind() const final { return Score::FullHouse; }
@@ -224,7 +224,7 @@ private:
 class ComboChance : public Combo
 {
 public:
-    ComboChance(const char* name) : Combo(name)
+    ComboChance(const std::string name) : Combo(name)
     {}
 
     Score::Kind Kind() const final { return Score::Chance; }
