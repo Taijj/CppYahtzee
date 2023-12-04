@@ -1,15 +1,23 @@
 #include "Model/Model.h"
+#include "View/View.h"
+
 #include "Controller/Game.h"
-//#include "View/View.h"
-
-
-
-
+#include "Controller/Input.h"
 
 int main()
 {
-    // TODO: Input
-    Model::Wake(3);
+    View::RenderWelcome();
+    
+    std::uint32_t count = 0;
+    while (count == 0)
+    {
+         count = Input::ForPlayerCount();
+
+         if (count == 0)
+             View::RenderInvalidInput();
+    }   
+        
+    Model::Wake(count);
 
     Game game = {};
     Game::ExitCode code = game.Run();

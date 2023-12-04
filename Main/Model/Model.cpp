@@ -3,7 +3,7 @@
 void Model::Wake(std::uint32_t playerCount)
 {		
 	_dice.clear();
-	for (std::uint32_t i = 0; i < Rules::DIE_SIDES; ++i)
+	for (std::uint32_t i = 0; i < Rules::DIE_COUNT; ++i)
 		_dice.push_back(std::make_unique<Die>(i));
 
 	_players.clear();

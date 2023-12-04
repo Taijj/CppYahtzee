@@ -1,22 +1,25 @@
 #include "Turn.h"
 
 #include "../Model/Model.h"
+#include "../View/View.h"
 
 
 
 #pragma region Main
-void Turn::Start(std::uint32_t playerId)
+void Turn::Start(std::uint32_t round, std::uint32_t playerId)
 {	
 	for (const auto& d : Model::GetDice())
 		d->Reset();
 	
+	_currentRound = round;
 	_currentPlayerId = playerId;
 	_rerollsLeft = Rules::REROLL_COUNT;
 	_state = Turn::Initial;
 }
 
 void Turn::Run()
-{
+{	
+	View::Clear();
 	switch (_state)
 	{
 		case Turn::Initial: RunInitial(); break;
@@ -35,26 +38,22 @@ bool Turn::WasCanceled() { return _state == Canceled; }
 #pragma region Phases
 void Turn::RunInitial()
 {
-	//_renderer.UpdatePlayer(*_player);
+	View::RenderRoundHeader(_currentRound, _currentPlayerId);
+	View::RenderInitialPhase();
 
-	//_renderer.RenderRound();
-	//_renderer.RenderTable();
-	//_renderer.RenderFirstThrow();	
-
-	Input::WaitForAnyKey();
+	Input::WaitForAnyKey();	
+	ThrowDice();
 }
 
 void Turn::RunPlaying()
 {
-	//_renderer.RenderRound();
+	View::RenderRoundHeader(_currentRound, _currentPlayerId);
 	//_renderer.RenderTable();
 	//_renderer.RenderRoundInputs();
 
 	const Command* com = nullptr;
 	while (com == nullptr)
-	{
 		com = Input::ForGame();
-	}
 
 	Execute(*com);
 }
@@ -193,7 +192,8 @@ void Turn::ThrowDice()
 		if (!d->IsIn(Die::Locked))
 			d->Throw();
 
-		_currentRoll[d->Id()] = d->Face();
+		std::uint32_t index = d->Id();
+		_currentRoll[index] = d->Face();
 	}
 	
 	--_rerollsLeft;

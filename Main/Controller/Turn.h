@@ -25,14 +25,15 @@ public:
 
 
 
-	Turn() : _currentPlayerId(0), _rerollsLeft(0), _state(None), _currentRoll({})
+	Turn() : _currentPlayerId(0), _currentRound(0),
+		_rerollsLeft(0), _state(None), _currentRoll({})
 	{}
 
 	~Turn() = default;
 
 
 
-	void Start(std::uint32_t playerId);
+	void Start(std::uint32_t round, std::uint32_t playerId);
 	void Run();
 
 	bool IsRunning();
@@ -42,6 +43,8 @@ public:
 
 private:		
 	std::uint32_t _currentPlayerId;
+	std::uint32_t _currentRound;
+
 	std::uint32_t _rerollsLeft;
 	State _state;
 

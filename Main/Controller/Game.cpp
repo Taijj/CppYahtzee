@@ -12,8 +12,8 @@ Game::ExitCode Game::Run()
         for (std::uint32_t i = 0; i < Model::GetPlayers().size(); ++i)
         {
             _currentPlayerId = i;
-            RunTurn();
-                       
+            RunTurn();                       
+
             if (_turn->WasCanceled())
                 return Canceled;
 
@@ -29,8 +29,7 @@ Game::ExitCode Game::Run()
 
 void Game::RunTurn()
 {
-    _turn->Start(_currentPlayerId);
-    //renderer.UpdateRound(currentRound, players[i].GetId());
+    _turn->Start(_currentRound, _currentPlayerId);
         
     while (_turn->IsRunning())
         _turn->Run();
