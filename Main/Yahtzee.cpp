@@ -6,6 +6,22 @@
 
 int main()
 {
+    View::Wake();
+
+    return 0;
+
+    View::RenderTable({
+        View::DieEntry{0, 3, false},
+        View::DieEntry{1, 5, false},
+        View::DieEntry{2, 6, true},
+        View::DieEntry{3, 1, false},
+        View::DieEntry{4, 3, true},
+        },
+        {});
+
+    return 0 ;
+
+
     View::RenderWelcome();
     
     std::uint32_t count = 0;

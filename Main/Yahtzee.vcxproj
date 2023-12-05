@@ -171,6 +171,9 @@
     <ClInclude Include="Model\Die.h" />
     <ClInclude Include="View\View.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\Sprites.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
