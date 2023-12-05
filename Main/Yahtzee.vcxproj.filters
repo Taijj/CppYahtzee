@@ -42,6 +42,9 @@
     <ClCompile Include="View\SpritesLoader.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="View\ViewTable.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\Die.h">

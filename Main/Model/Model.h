@@ -62,8 +62,8 @@ public:
 		std::make_unique<ComboOfKind>("3 of a Kind", Score::OfKind3, 3),
 		std::make_unique<ComboOfKind>("4 of a Kind", Score::OfKind4, 4),
 		std::make_unique<ComboFullHouse>("Full House"),
-		std::make_unique<ComboStraight>("Small Straight", Score::StraightSmall, 4, 30),
-		std::make_unique<ComboStraight>("Large Straight", Score::StraightLarge, 5, 40),
+		std::make_unique<ComboStraight>("S. Straight", Score::StraightSmall, 4, 30),
+		std::make_unique<ComboStraight>("L. Straight", Score::StraightLarge, 5, 40),
 		std::make_unique<ComboOfKind>("Yahtzee", Score::Yahtzee, 5, 50),
 
 		std::make_unique<ComboChance>("Chance")

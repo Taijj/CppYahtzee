@@ -16,7 +16,6 @@ void SpritesLoader::LoadSprites()
 		Sprites* raw = _sprites.release();
 		delete[] raw;
 	}
-
 	_sprites = std::make_unique<Sprites>();
 
 	_file = std::ifstream(PATH);
@@ -30,10 +29,15 @@ void SpritesLoader::LoadSprites()
 	_file.close();
 }
 
+const std::uint32_t SpritesLoader::SpriteHeight() const
+{
+	return _spriteHeight;
+}
+
 const SpritesLoader::Sprite SpritesLoader::GetBy(std::uint32_t face) const
 {
 	Sprites& sprites = *_sprites;
-	return sprites[face];
+	return sprites[face-1];
 }
 #pragma endregion
 

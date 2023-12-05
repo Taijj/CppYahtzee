@@ -158,6 +158,7 @@
     <ClCompile Include="Model\Player.cpp" />
     <ClCompile Include="View\SpritesLoader.cpp" />
     <ClCompile Include="View\View.cpp" />
+    <ClCompile Include="View\ViewTable.cpp" />
     <ClCompile Include="Yahtzee.cpp" />
   </ItemGroup>
   <ItemGroup>

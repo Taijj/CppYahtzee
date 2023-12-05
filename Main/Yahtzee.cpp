@@ -7,17 +7,20 @@
 int main()
 {
     View::Wake();
+    Model::Wake(1);
 
-    return 0;
+    std::vector<View::ComboData> comb;
+    for (const auto& c : Model::COMBOS)
+        comb.push_back({ c->Name(), 12 });
 
     View::RenderTable({
-        View::DieEntry{0, 3, false},
-        View::DieEntry{1, 5, false},
-        View::DieEntry{2, 6, true},
-        View::DieEntry{3, 1, false},
-        View::DieEntry{4, 3, true},
+        View::DieData{0, 3, true},
+        View::DieData{1, 5, false},
+        View::DieData{2, 6, false},
+        View::DieData{3, 1, false},
+        View::DieData{4, 3, true},
         },
-        {});
+        comb);
 
     return 0 ;
 
