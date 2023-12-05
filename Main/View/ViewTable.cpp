@@ -5,10 +5,12 @@
 
 // This file was separated from View.cpp for readability reasons.
 
-void View::RenderTable(DieDatas dice, ComboDatas combos)
+void View::RenderTable(const DieDatas& dice, const ComboDatas& combos)
 {
 	_dice = dice;
 	_combos = combos;
+
+	std::cout << '\n';
 
 	// The following logic renders a Table containing the "Hand" and "Locked" Labels,
 	// the respective dice, rendered as character sprites, and the 13 possible game
@@ -18,6 +20,8 @@ void View::RenderTable(DieDatas dice, ComboDatas combos)
 	// 13 Rows (1 for each Combo, the remaining data centered in the vertical middle)
 	for (std::uint32_t row = 0; row < 13; ++row)
 	{
+		std::cout << INDENT;
+
 		for (std::uint32_t column = 0; column < 7; ++column)
 		{
 			if (column == 0)
@@ -38,7 +42,7 @@ void View::RenderTable(DieDatas dice, ComboDatas combos)
 		std::cout << '\n';
 	}
 
-	std::cout.flush();
+	std::cout << std::endl;
 }
 
 
@@ -57,14 +61,20 @@ void View::RenderComboCell(uInt row)
 	std::cout << INDENT
 		<< std::setw(TABLE_COMBO_NAME_WIDTH) << std::right
 		<< _combos[row].name << ": "
-		<< std::setw(TABLE_COMBO_SCORE_WIDTH) << std::left
-		<< _combos[row].score;
+		<< std::setw(TABLE_COMBO_SCORE_WIDTH) << std::right;
+
+	std::int32_t score = _combos[row].score;
+	if (score >= 0)
+		std::cout << score;
+	else
+		std::cout << EMPTY;
 }
 
 void View::RenderDieCell(uInt row, uInt column)
 {
-	const uInt middleGapRow = 6;
-	if (row == 0 || row == middleGapRow || row == 12) // gaps
+	const uInt middleGap = 6;
+	const bool isGap = row == 0 || row == middleGap || row == 12;
+	if (isGap)
 	{
 		RenderCell(TABLE_DIE_WIDTH);
 		return;
@@ -73,14 +83,14 @@ void View::RenderDieCell(uInt row, uInt column)
 	DieData entry = _dice[column-1];
 	if (entry.isLocked)
 	{
-		RenderCell(TABLE_DIE_WIDTH, row > middleGapRow
-			? _sprites->GetBy(entry.face).at(row - middleGapRow-1)
+		RenderCell(TABLE_DIE_WIDTH, row > middleGap
+			? _sprites->GetBy(entry.face).at(row - middleGap-1)
 			: ""
 		);
 	}
 	else
 	{
-		RenderCell(TABLE_DIE_WIDTH, row < middleGapRow
+		RenderCell(TABLE_DIE_WIDTH, row < middleGap
 			? _sprites->GetBy(entry.face).at(row-1)
 			: ""
 		);

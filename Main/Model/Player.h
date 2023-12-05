@@ -33,9 +33,9 @@ public:
 	/// </summary>
 	/// <param name="kind">The ScoreKind of the target Combo.</param>
 	/// <param name="score">If the player has scored a Combo with the given kind, this
-	/// will be set to that score, 0 otherwise.</param>
+	/// will be set to that score, -1 otherwise.</param>
 	/// <returns>True, if the player has scored the Combo, false otherwise</returns>
-	bool TryGetScore(const Score::Kind kind, uInt& score) const;
+	bool TryGetScore(const Score::Kind kind, std::int32_t& score) const;
 	
 	/// <summary>
 	/// Returns the total score this Player has achieved so far.

@@ -55,6 +55,9 @@ private:
 	void RunLocking();
 	void RunScoring();
 
+	void RenderTable() const;
+	void RenderCommands(const std::vector<Command> availableCommands) const;
+
 	void Execute(const Command& command);
 	void ThrowDice();
 	void ExitGame();

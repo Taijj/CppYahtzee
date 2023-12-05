@@ -39,7 +39,9 @@ void View::RenderRoundHeader(std::uint32_t roundIndex, std::uint32_t playerId)
 
 void View::RenderInitialPhase()
 {
-	std::cout << "# Press any key to throw the dice!";
+	std::cout
+		<< INDENT
+		<< "# Press any key to throw the dice!";
 	std::cout.flush();
 }
 
@@ -53,5 +55,36 @@ void View::RenderInvalidInput()
 void View::Clear()
 {
 	std::cout << CLEAR_ALL;
+	std::cout.flush();
+}
+
+
+
+void View::RenderCommands(const CommandDatas& commands)
+{
+	std::cout
+		<< INDENT
+		<< "# Use the following commands to continue:\n\n";
+
+	uInt count = 0;
+	for (const auto& c : commands)
+	{
+		string out = std::format("({}) - {}", c.character, c.description);
+		std::cout << INDENT
+			<< std::setw(COMMAND_ENTRY_WIDTH)
+			<< std::left
+			<< out;
+
+		count++;
+		if (count >= MAX_COMMANDS_PER_LINE)
+		{
+			count = 0;
+			std::cout << '\n';
+		}
+	}
+
+	std::cout << "\n\n"
+		<< INDENT
+		<< YOUR_INPUT;
 	std::cout.flush();
 }

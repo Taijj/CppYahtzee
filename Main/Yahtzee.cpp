@@ -7,24 +7,6 @@
 int main()
 {
     View::Wake();
-    Model::Wake(1);
-
-    std::vector<View::ComboData> comb;
-    for (const auto& c : Model::COMBOS)
-        comb.push_back({ c->Name(), 12 });
-
-    View::RenderTable({
-        View::DieData{0, 3, true},
-        View::DieData{1, 5, false},
-        View::DieData{2, 6, false},
-        View::DieData{3, 1, false},
-        View::DieData{4, 3, true},
-        },
-        comb);
-
-    return 0 ;
-
-
     View::RenderWelcome();
     
     std::uint32_t count = 0;
@@ -37,7 +19,6 @@ int main()
     }   
         
     Model::Wake(count);
-
     Game game = {};
     Game::ExitCode code = game.Run();
     

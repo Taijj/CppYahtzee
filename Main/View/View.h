@@ -25,11 +25,18 @@ public:
 	struct ComboData
 	{
 		string name;
-		uInt score;
+		std::int32_t score;
+	};
+
+	struct CommandData
+	{
+		char character;
+		string description;
 	};
 
 	using DieDatas = std::vector<DieData>;
-	using ComboDatas = std::vector<ComboData>;
+	using ComboDatas = std::vector<ComboData>;	
+	using CommandDatas = std::vector<CommandData>;
 
 
 
@@ -40,7 +47,8 @@ public:
 	static void RenderWelcome();
 	static void RenderInitialPhase();
 	static void RenderRoundHeader(uInt roundIndex, uInt playerId);	
-	static void RenderTable(DieDatas dice, ComboDatas combos);
+	static void RenderTable(const DieDatas& dice, const ComboDatas& combos);
+	static void RenderCommands(const CommandDatas& commands);
 
 	static void Clear();
 	static void RenderInvalidInput();
@@ -65,12 +73,15 @@ private:
 	inline static ComboDatas _combos;
 
 
+	inline static constexpr uInt MAX_COMMANDS_PER_LINE = 2U;
+	inline static constexpr uInt COMMAND_ENTRY_WIDTH = 30U;
 
-	// Helpers for Table rendering
+
+	// Helpers for tabular rendering
 	inline static constexpr uInt TABLE_LABEL_WIDTH = 10U;
 	inline static constexpr uInt TABLE_COMBO_NAME_WIDTH = 12U;
 	inline static constexpr uInt TABLE_COMBO_SCORE_WIDTH = 3U;
-	inline static constexpr uInt TABLE_DIE_WIDTH = 7U;
+	inline static constexpr uInt TABLE_DIE_WIDTH = 7U;	
 
 	static void RenderLabelCell(uInt row);
 	static void RenderComboCell(uInt row);

@@ -27,9 +27,9 @@ void Player::SetScore(const Score::Kind kind, const std::uint32_t value)
 	CalculateScores();
 }
 
-bool Player::TryGetScore(const Score::Kind kind, std::uint32_t& score) const
+bool Player::TryGetScore(const Score::Kind kind, std::int32_t& score) const
 {
-	score = 0;
+	score = Rules::UNDEFINED;
 	if (false == _scoresByKind.contains(kind))
 		return false;	
 
@@ -59,10 +59,10 @@ void Player::SumUp(const Score::Kind from, const Score::Kind to)
 {
 	for (std::uint32_t i = from; i < to+1U; ++i)
 	{
-		std::uint32_t score;
+		std::int32_t score;
 		bool hasScore = TryGetScore(static_cast<Score::Kind>(i), score);
 
-		_totalScore += score;
+		_totalScore += hasScore ? score : 0;
 		_potentialScore = !hasScore
 			? Model::COMBOS.at(i)->MaxPossibleScore()
 			: score;

@@ -1,5 +1,7 @@
 #include "Turn.h"
 
+#include <vector>
+
 #include "../Model/Model.h"
 #include "../View/View.h"
 
@@ -48,12 +50,16 @@ void Turn::RunInitial()
 void Turn::RunPlaying()
 {
 	View::RenderRoundHeader(_currentRound, _currentPlayerId);
-	//_renderer.RenderTable();
-	//_renderer.RenderRoundInputs();
+	RenderTable();
+	RenderCommands({Input::THROW, Input::LOCK, Input::EXIT, Input::SCORE});
 
 	const Command* com = nullptr;
 	while (com == nullptr)
+	{
 		com = Input::ForGame();
+		if (com == nullptr)
+			View::RenderInvalidInput();
+	}
 
 	Execute(*com);
 }
@@ -116,7 +122,7 @@ void Turn::RunScoring()
 	Score::Kind kind;
 	while (true) // Until a valid input was made
 	{
-		const Command* com = Input::ForScoring(kind);		
+		const Command* com = Input::ForScoring(kind);
 		
 		// Default game command was put in
 		if (com != nullptr)
@@ -128,7 +134,7 @@ void Turn::RunScoring()
 		// A kind was selected that the player did not score, yet
 		if (kind != Score::Undefined)
 		{
-			std::uint32_t _;
+			std::int32_t _;
 			if (!player->TryGetScore(kind, _))
 				break;
 
@@ -156,6 +162,38 @@ void Turn::RunScoring()
 	
 	if(false == Input::isAutomatic)
 		Input::WaitForAnyKey();
+}
+#pragma endregion
+
+
+
+#pragma region Rendering
+void Turn::RenderTable() const
+{
+	std::vector<View::DieData> dice;
+	for (const auto& d : Model::GetDice())
+		dice.push_back({ d->Id(), d->Face() });
+
+	std::vector<View::ComboData> combos;
+	for (const auto& c : Model::COMBOS)
+	{
+		const auto& player = Model::GetPlayers().at(_currentPlayerId);
+		std::int32_t score;
+		player->TryGetScore(c->Kind(), score);
+
+		combos.push_back({ c->Name(), score });
+	}
+
+	View::RenderTable(dice, combos);	
+}
+
+void Turn::RenderCommands(const std::vector<Command> availableCommands) const
+{
+	std::vector<View::CommandData> commands;
+	for (const Command& c : availableCommands)
+		commands.push_back({ c.character, c.description });
+
+	View::RenderCommands(commands);
 }
 #pragma endregion
 
