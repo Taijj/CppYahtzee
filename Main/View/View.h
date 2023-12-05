@@ -4,6 +4,9 @@
 #include <string>
 #include <format>
 #include <vector>
+#include <memory>
+
+#include "SpritesLoader.h"
 
 class View
 {
@@ -62,4 +65,8 @@ private:
 	inline static const std::string YOUR_INPUT = "# Your Input: ";
 	inline static const std::string INVALID_INPUT = "# INVALID INPUT! Please try again: ";
 	inline static const std::string ALREADY_SCORED = "# You already scored this Combo! Try another: ";
+
+
+
+	inline static std::unique_ptr<SpritesLoader> _sprites;
 };

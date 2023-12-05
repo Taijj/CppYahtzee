@@ -39,6 +39,9 @@
     <ClCompile Include="Controller\Input.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="View\SpritesLoader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\Die.h">
@@ -69,6 +72,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Controller\Input.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="View\SpritesLoader.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
