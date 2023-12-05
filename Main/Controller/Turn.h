@@ -10,7 +10,7 @@ class Turn
 {
 
 public:
-	enum State
+	enum Phase
 	{
 		None = 0,
 
@@ -26,7 +26,7 @@ public:
 
 
 	Turn() : _currentPlayerId(0), _currentRound(0),
-		_rerollsLeft(0), _state(None), _currentRoll({})
+		_rerollsLeft(0), _phase(None), _currentRoll({})
 	{}
 
 	~Turn() = default;
@@ -46,7 +46,7 @@ private:
 	std::uint32_t _currentRound;
 
 	std::uint32_t _rerollsLeft;
-	State _state;
+	Phase _phase;
 
 	std::array<std::uint32_t, Rules::DIE_COUNT> _currentRoll;
 	

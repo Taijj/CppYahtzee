@@ -73,25 +73,32 @@ void View::RenderComboCell(uInt row)
 void View::RenderDieCell(uInt row, uInt column)
 {
 	const uInt middleGap = 6;
-	const bool isGap = row == 0 || row == middleGap || row == 12;
+	const bool isGap = row == middleGap || row == 12;
 	if (isGap)
 	{
 		RenderCell(TABLE_DIE_WIDTH);
 		return;
 	}
 
-	DieData entry = _dice[column-1];
-	if (entry.isLocked)
+	DieData die = _dice[column-1];
+	const bool isHeadline = row == 0;
+	if (isHeadline)
+	{
+		RenderCell(TABLE_DIE_WIDTH, std::format("- {} -", die.id+1));
+		return;
+	}
+
+	if (die.isLocked)
 	{
 		RenderCell(TABLE_DIE_WIDTH, row > middleGap
-			? _sprites->GetBy(entry.face).at(row - middleGap-1)
+			? _sprites->GetBy(die.face).at(row - middleGap-1)
 			: ""
 		);
 	}
 	else
 	{
 		RenderCell(TABLE_DIE_WIDTH, row < middleGap
-			? _sprites->GetBy(entry.face).at(row-1)
+			? _sprites->GetBy(die.face).at(row-1)
 			: ""
 		);
 	}

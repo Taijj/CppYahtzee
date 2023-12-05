@@ -21,8 +21,7 @@ public:
 class Input
 {
 
-public:
-	using Tutorial = std::vector<std::string>;
+public:	
 	using ScoreCommands = std::vector<std::pair<std::string, Score::Kind>>;
 
 	inline static Command THROW = { 't', "Throw dice"};
@@ -50,23 +49,6 @@ public:
 		{"y", Score::Kind::Yahtzee },
 		{"c", Score::Kind::Chance }
 	};
-	
-		
-
-	inline static const auto LOCK_TUTORIAL = Tutorial {
-		"# Select one or multiple dice by typing in one or more numbers from 1-5.",
-		"# Example: '125' will select the dice 1, 2, and 5.\n",
-		"# Use the default command to continue or end your turn:"
-	};
-		
-	inline static const auto SCORE_TUTORIAL = Tutorial{
-		"# When scoring, select how you want to score by adding one of the following after the command:",		
-		"1 - Aces\t\t 2 - Twos\t\t 3 - Threes\t",
-		"4 - Fours\t\t 5 - Fives\t\t 6 - Sixes\t",
-		"3k - 3 of a Kind\t 4k - 4 of a Kind\t fh - Full House\t",
-		"ss - Small Straight\t sl - Large Straight\t y - Yahtzee\t",
-		"c - Chance"
-	};	
 
 
 

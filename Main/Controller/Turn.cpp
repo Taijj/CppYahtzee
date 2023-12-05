@@ -16,13 +16,13 @@ void Turn::Start(std::uint32_t round, std::uint32_t playerId)
 	_currentRound = round;
 	_currentPlayerId = playerId;
 	_rerollsLeft = Rules::REROLL_COUNT;
-	_state = Turn::Initial;
+	_phase = Turn::Initial;
 }
 
 void Turn::Run()
 {	
 	View::Clear();
-	switch (_state)
+	switch (_phase)
 	{
 		case Turn::Initial: RunInitial(); break;
 		case Turn::Playing: RunPlaying(); break;
@@ -31,8 +31,8 @@ void Turn::Run()
 	}
 }
 
-bool Turn::IsRunning() { return _state != Completed && _state != Canceled; }
-bool Turn::WasCanceled() { return _state == Canceled; }
+bool Turn::IsRunning() { return _phase != Completed && _phase != Canceled; }
+bool Turn::WasCanceled() { return _phase == Canceled; }
 #pragma endregion
 
 
@@ -66,14 +66,13 @@ void Turn::RunPlaying()
 
 void Turn::RunLocking()
 {
-	//_renderer.RenderRound();
-	//_renderer.RenderTable();
-	//_renderer.RenderLockInputs();
-		
+	View::RenderRoundHeader(_currentRound, _currentPlayerId);
+	RenderTable();
+	RenderCommands({ Input::THROW, Input::SCORE, Input::EXIT });
 
-
+	// Loop until valid input was made
 	std::vector<std::uint32_t> ids;
-	while(true) // until a valid input was made
+	while(true)
 	{	
 		ids.clear();
 		const Command* com = Input::ForLocking(ids);
@@ -89,11 +88,10 @@ void Turn::RunLocking()
 		if (ids.size() > 0)
 			break;
 
-		// TODO: Invalid
-	}	
-	
+		View::RenderInvalidInput();
+	}
 
-
+	// Interpret input and un-/lock dice
 	for (const std::uint32_t id : ids)
 	{
 		const auto& d = Model::GetDice().at(id - 1);
@@ -107,15 +105,13 @@ void Turn::RunLocking()
 		Die::State state = d->IsIn(Die::Thrown) ? Die::ToBeLocked : Die::Thrown;
 		d->Set(state);
 	}
-
-	//_renderer.UpdatePlayer(*_player);
 }
 
 void Turn::RunScoring()
 {	
-	//_renderer.RenderRound();
-	//_renderer.RenderTable();
-	//_renderer.RenderScoreInputs();
+	View::RenderRoundHeader(_currentRound, _currentPlayerId);
+	RenderTable();
+	RenderCommands({ Input::THROW, Input::SCORE, Input::EXIT });
 
 	const auto& player = Model::GetPlayers().at(_currentPlayerId);
 		
@@ -155,7 +151,7 @@ void Turn::RunScoring()
 		break;
 	}
 
-	_state = Turn::Completed;
+	_phase = Turn::Completed;
 	//_renderer.UpdatePlayer(*_player);
 	//_renderer.RenderRound();
 	//_renderer.RenderTable();
@@ -172,7 +168,10 @@ void Turn::RenderTable() const
 {
 	std::vector<View::DieData> dice;
 	for (const auto& d : Model::GetDice())
-		dice.push_back({ d->Id(), d->Face() });
+	{
+		bool appearsLocked = d->IsIn(Die::Locked) || d->IsIn(Die::ToBeLocked);
+		dice.push_back({ d->Id(), d->Face(), appearsLocked });
+	}
 
 	std::vector<View::ComboData> combos;
 	for (const auto& c : Model::COMBOS)
@@ -193,7 +192,12 @@ void Turn::RenderCommands(const std::vector<Command> availableCommands) const
 	for (const Command& c : availableCommands)
 		commands.push_back({ c.character, c.description });
 
-	View::RenderCommands(commands);
+	View::Tutorial tut = {};
+	if (_phase == Locking)
+		tut = View::LOCK_TUTORIAL;
+	else if (_phase == Scoring)
+		tut = View::SCORE_TUTORIAL;
+	View::RenderCommands(commands, tut);
 }
 #pragma endregion
 
@@ -212,11 +216,11 @@ void Turn::Execute(const Command& command)
 	}
 	else if (command == Input::LOCK)
 	{
-		_state = Turn::Locking;
+		_phase = Turn::Locking;
 	}
 	else if (command == Input::SCORE)
 	{
-		_state = Turn::Scoring;
+		_phase = Turn::Scoring;
 	}
 }
 
@@ -235,7 +239,7 @@ void Turn::ThrowDice()
 	}
 	
 	--_rerollsLeft;
-	_state = _rerollsLeft > 0 ? Turn::Playing : Turn::Scoring;
+	_phase = _rerollsLeft > 0 ? Turn::Playing : Turn::Scoring;
 
 	//_renderer.UpdateRerollsLeft(_rerollsLeft);
 	//_renderer.UpdatePlayer(*_player);
@@ -252,6 +256,6 @@ void Turn::ExitGame()
 	}
 	
 	if(*com == Input::YES)
-		_state = Turn::Canceled;
+		_phase = Turn::Canceled;
 }
 #pragma endregion

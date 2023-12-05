@@ -27,7 +27,7 @@ void View::RenderWelcome()
 
 void View::RenderRoundHeader(std::uint32_t roundIndex, std::uint32_t playerId)
 {
-	std::cout << "\n\n" << INDENT
+	std::cout << '\n' << INDENT
 		<< "Round " << roundIndex+1 << " __________________ "
 		<< "Player " << playerId+1 << "\n"
 		<< std::endl;
@@ -60,12 +60,14 @@ void View::Clear()
 
 
 
-void View::RenderCommands(const CommandDatas& commands)
+void View::RenderCommands(const CommandDatas& commands, Tutorial tutorial)
 {
+	// Headline
 	std::cout
 		<< INDENT
 		<< "# Use the following commands to continue:\n\n";
 
+	// Commands
 	uInt count = 0;
 	for (const auto& c : commands)
 	{
@@ -81,9 +83,23 @@ void View::RenderCommands(const CommandDatas& commands)
 			count = 0;
 			std::cout << '\n';
 		}
+	}	
+
+	// Tutorial
+	if (tutorial.size() != 0)
+	{
+		std::cout << "\n\n";
+		for (const auto& l : tutorial)
+		{
+			std::cout
+				<< INDENT
+				<< l
+				<< '\n';
+		}
 	}
 
-	std::cout << "\n\n"
+	// Input field
+	std::cout << '\n'
 		<< INDENT
 		<< YOUR_INPUT;
 	std::cout.flush();
