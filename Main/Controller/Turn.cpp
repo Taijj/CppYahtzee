@@ -175,6 +175,8 @@ void Turn::RunScoring()
 #pragma region Rendering
 void Turn::RenderTable() const
 {
+	const auto& player = Model::GetPlayers().at(_currentPlayerId);
+	
 	std::vector<View::DieData> dice;
 	for (const auto& d : Model::GetDice())
 	{
@@ -184,9 +186,7 @@ void Turn::RenderTable() const
 
 	std::vector<View::ComboData> combos;
 	for (const auto& c : Model::COMBOS)
-	{
-		const auto& player = Model::GetPlayers().at(_currentPlayerId);
-		
+	{	
 		std::int32_t score;
 		player->TryGetScore(c->Kind(), score);
 
@@ -195,7 +195,12 @@ void Turn::RenderTable() const
 		combos.push_back({ c->Name(), command, score });
 	}
 
-	View::RenderTable(dice, combos);	
+	View::RenderTable({
+		dice,
+		combos,
+		player->TotalScore(),
+		player->HasBonus() ? Rules::BONUS_SCORE : 0
+	});
 }
 
 void Turn::RenderCommands(const std::vector<Command> availableCommands, std::uint32_t hintKind) const

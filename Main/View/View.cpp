@@ -126,7 +126,7 @@ void View::RenderHint(const HintKind kind)
 	}
 
 	const Tutorial tut = kind == Locking ? LOCK_TUTORIAL : SCORE_TUTORIAL;
-	for (const auto& l : LOCK_TUTORIAL)
+	for (const auto& l : tut)
 	{
 		std::cout
 			<< INDENT

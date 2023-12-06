@@ -5,24 +5,22 @@
 
 // This file was separated from View.cpp for readability reasons.
 
-void View::RenderTable(const DieDatas& dice, const ComboDatas& combos)
+void View::RenderTable(const Table& table)
 {
-	_dice = dice;
-	_combos = combos;
-
+	_table = table;
 	std::cout << '\n';
 
 	// The following logic renders a Table containing the "Hand" and "Locked" Labels,
-	// the respective dice, rendered as character sprites, and the 13 possible game
-	// Combos, displayed as a name with a score value.
+	// the respective dice, rendered as character sprites, combos, the player's total
+	// score and more.
 	// 
-	// The table has 7 Columns (0:Labels - 1-5:Dice - 6:Combos) and
+	// The table has 8 Columns (0:Labels - 1-5:Dice - 6:Combos - 7:Score & Bonus) and
 	// 13 Rows (1 for each Combo, the remaining data centered in the vertical middle)
 	for (std::uint32_t row = 0; row < 13; ++row)
 	{
 		std::cout << INDENT;
 
-		for (std::uint32_t column = 0; column < 7; ++column)
+		for (std::uint32_t column = 0; column < 8; ++column)
 		{
 			if (column == 0)
 			{
@@ -33,6 +31,12 @@ void View::RenderTable(const DieDatas& dice, const ComboDatas& combos)
 			if (column == 6)
 			{
 				RenderComboCell(row);
+				continue;
+			}
+
+			if (column == 7)
+			{
+				RenderScoreCell(row);
 				continue;
 			}
 
@@ -58,24 +62,17 @@ void View::RenderLabelCell(uInt row)
 
 void View::RenderComboCell(uInt row)
 {
-	ComboData data = _combos[row];
+	ComboData data = _table.combos[row];
 
 	std::cout << INDENT
 		<< std::setw(TABLE_COMBO_NAME_WIDTH) << std::right
 		<< data.name << ": "
 		<< std::setw(TABLE_COMBO_SCORE_WIDTH) << std::right;
-
-	std::int32_t score = data.score;
-	if (score < 0)
-	{
-		std::cout << EMPTY
-			<< INDENT
-			<< '(' << data.command << ')';
-	}
-	else
-	{
-		std::cout << score;
-	}	
+	
+	string cell = data.score < 0
+		? std::format("({})", data.command)
+		: std::to_string(data.score);
+	std::cout << cell;
 }
 
 void View::RenderDieCell(uInt row, uInt column)
@@ -88,7 +85,7 @@ void View::RenderDieCell(uInt row, uInt column)
 		return;
 	}
 
-	DieData die = _dice[column-1];
+	DieData die = _table.dice[column-1];
 	const bool isHeadline = row == 0;
 	if (isHeadline)
 	{
@@ -109,6 +106,20 @@ void View::RenderDieCell(uInt row, uInt column)
 			? _sprites->GetBy(die.face).at(row-1)
 			: ""
 		);
+	}
+}
+
+void View::RenderScoreCell(uInt row)
+{
+	if (row == 0)
+	{
+		RenderCell(TABLE_SCORE_WIDTH,
+			std::format("{}Total: {}", INDENT, _table.totalScore));
+	}
+	else if (row == 2 && _table.bonus > 0)
+	{
+		RenderCell(TABLE_SCORE_WIDTH,
+			std::format("{}Bonus: {}", INDENT, _table.bonus));
 	}
 }
 
