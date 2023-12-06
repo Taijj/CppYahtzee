@@ -156,7 +156,7 @@ public:
 
     uInt Score(Roll& roll) const final
     {
-        const uInt min = *std::min(roll.begin(), roll.end());
+        const uInt min = *std::min_element(roll.begin(), roll.end());
 
         uInt count = 0;
         for (uInt i = 0; i < _length; ++i)

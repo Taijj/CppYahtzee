@@ -57,7 +57,7 @@ private:
 	void RunScoring();
 
 	void RenderTable() const;
-	void RenderCommands(const std::vector<Command> availableCommands) const;
+	void RenderCommands(const std::vector<Command> availableCommands, std::uint32_t hintKind = 0) const;
 
 	void Execute(const Command& command);
 	void ThrowDice();

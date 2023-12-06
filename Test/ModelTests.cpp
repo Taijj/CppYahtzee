@@ -148,5 +148,84 @@ namespace YahtzeeTest
 
 			// TODO: More tests
 		}
+
+		/// <summary>
+		/// Do Straight Combos give the correct Score?
+		/// </summary>
+		TEST_METHOD(StraightCombosCorrectlyScore)
+		{
+			using Roll = std::array<std::uint32_t, Rules::DIE_COUNT>;
+			std::uint32_t count = 0;
+
+			auto check = [&](Roll r, std::uint32_t expected, bool isSmall = true)
+				{
+					count++;
+					const auto& straight = Model::COMBOS.at(isSmall ? 9 : 10);
+
+					if (isSmall)
+						Assert::IsTrue(straight->Kind() == Score::StraightSmall);
+					else
+						Assert::IsTrue(straight->Kind() == Score::StraightLarge);
+
+					std::uint32_t score = straight->Score(r);
+					Assert::IsTrue(score == expected,
+						GetMessage(expected, score, count).c_str());
+				};
+
+			Roll r1 = { 1, 2, 3, 4, 5 };
+			check(r1, 30);
+			check(r1, 40, false);
+
+			Roll r2 = { 6, 2, 3, 4, 5 };
+			check(r2, 30);
+			check(r2, 40, false);
+
+			Roll r3 = { 6, 5, 2, 4, 3 };
+			check(r3, 30);
+			check(r3, 40, false);
+
+			Roll r4 = { 5, 1, 4, 3, 2 };
+			check(r4, 30);
+			check(r4, 40, false);
+
+
+
+			Roll r5 = { 4, 1, 4, 3, 2 };
+			check(r5, 30);
+			check(r5, 0, false);
+
+			Roll r6 = { 4, 1, 6, 3, 2 };
+			check(r6, 30);
+			check(r6, 0, false);
+
+			Roll r7 = { 4, 1, 6, 3, 2 };
+			check(r7, 30);
+			check(r7, 0, false);
+
+			Roll r8 = { 4, 5, 6, 3, 4 };
+			check(r8, 30);
+			check(r8, 0, false);
+
+
+
+			Roll r9 = { 4, 1, 4, 2, 2 };
+			check(r9, 0);
+			check(r9, 0, false);
+
+			Roll r10 = { 1, 1, 6, 3, 2 };
+			check(r10, 0);
+			check(r10, 0, false);
+
+			Roll r11 = { 3, 1, 5, 3, 2 };
+			check(r11, 0);
+			check(r11, 0, false);
+
+			Roll r12 = { 4, 5, 5, 3, 3 };
+			check(r12, 0);
+			check(r12, 0, false);
+		}		
+
+
+		// TODO: More tests
 	};
 }

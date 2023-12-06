@@ -28,8 +28,9 @@ void View::RenderWelcome()
 void View::RenderRoundHeader(std::uint32_t roundIndex, std::uint32_t playerId)
 {
 	std::cout << '\n' << INDENT
-		<< "Round " << roundIndex+1 << " __________________ "
-		<< "Player " << playerId+1 << "\n"
+		<< ">>> Round " << roundIndex+1 << " - "
+		<< "Player " << playerId+1
+		<< " _______________________________________________\n"
 		<< std::endl;
 }
 
@@ -62,6 +63,13 @@ void View::RenderInvalidInput()
 	std::cout.flush();
 }
 
+void View::RenderExitConfirmation()
+{
+	std::cout << "\n\n\n" << INDENT
+		<< "Do you really want to exit?\n"
+		<< std::endl;
+}
+
 void View::Clear()
 {
 	std::cout << CLEAR_ALL;
@@ -70,26 +78,10 @@ void View::Clear()
 
 
 
-void View::RenderCommands(const CommandDatas& commands, Tutorial tutorial)
+
+void View::RenderCommands(const CommandDatas& commands, const HintKind hint)
 {	
-	if (tutorial.size() != 0) // Tutorial Headline
-	{
-		for (const auto& l : tutorial)
-		{
-			std::cout
-				<< INDENT
-				<< l
-				<< '\n';
-		}
-		std::cout << '\n';
-	}
-	else // Default Headline
-	{
-		std::cout
-			<< INDENT
-			<< DEFAULT_COMMAND_HEADLINE
-			<< "\n\n";
-	}
+	RenderHint(hint);
 
 	// Commands
 	uInt count = 0;
@@ -117,4 +109,29 @@ void View::RenderCommands(const CommandDatas& commands, Tutorial tutorial)
 		<< INDENT
 		<< YOUR_INPUT;
 	std::cout.flush();
+}
+
+void View::RenderHint(const HintKind kind)
+{
+	if (kind == None)
+		return;
+
+	if (kind == Default)
+	{
+		std::cout
+			<< INDENT
+			<< DEFAULT_COMMAND_HEADLINE
+			<< "\n\n";
+		return;
+	}
+
+	const Tutorial tut = kind == Locking ? LOCK_TUTORIAL : SCORE_TUTORIAL;
+	for (const auto& l : LOCK_TUTORIAL)
+	{
+		std::cout
+			<< INDENT
+			<< l
+			<< '\n';
+	}
+	std::cout << '\n';
 }

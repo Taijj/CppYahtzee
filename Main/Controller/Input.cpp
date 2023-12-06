@@ -38,8 +38,7 @@ const Command* Input::ForGame()
 }
 
 const Command* Input::ForLocking(std::vector<std::uint32_t>& dieIds)
-{
-	const Command* command = nullptr;
+{	
 	dieIds.clear();
 		
 	std::string input;
@@ -47,12 +46,12 @@ const Command* Input::ForLocking(std::vector<std::uint32_t>& dieIds)
 
 	int length = static_cast<std::uint32_t>(input.size());
 	if (length == 0)
-		return command;
+		return nullptr;
 
 	// Return early, if one of the default commands was put in
-	command = ParseForGameCommand(input);
-	if (command != nullptr && *command != LOCK)
-		return command;
+	const Command* com = ParseForGameCommand(input);
+	if (com != nullptr && *com != LOCK)
+		return com;
 
 	// The user may input millions of characters.To counter that
 	// we're only considering the first 10 characters.
@@ -68,12 +67,11 @@ const Command* Input::ForLocking(std::vector<std::uint32_t>& dieIds)
 			dieIds.push_back(id);
 	}
 	
-	return command;
+	return nullptr;
 }
 
 const Command* Input::ForScoring(Score::Kind& scoreKind)
 {
-	const Command* command = nullptr;
 	scoreKind = Score::Kind::Undefined;
 
 	std::string input;
@@ -81,12 +79,12 @@ const Command* Input::ForScoring(Score::Kind& scoreKind)
 
 	int length = static_cast<int>(input.size());
 	if (length <= 0)
-		return command;
+		return nullptr;
 
 	// Return early, if player wants to exit
-	command = ParseForGameCommand(input);
-	if (command != nullptr && *command == EXIT)
-		return command;
+	const Command* com = ParseForGameCommand(input);
+	if (com != nullptr && *com == EXIT)
+		return com;
 
 	// Scoring sub commands are expected to either be 1 or 2 characters long
 	std::uint32_t commandLength = length == 1 ? 1 : 2;
@@ -96,11 +94,11 @@ const Command* Input::ForScoring(Score::Kind& scoreKind)
 		if (com == SCORE_COMMANDS[i].first)
 		{
 			scoreKind = SCORE_COMMANDS[i].second;
-			return command;
+			return nullptr;
 		}
 	}
 	
-	return command;
+	return nullptr;
 }
 
 

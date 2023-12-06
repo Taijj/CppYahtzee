@@ -32,6 +32,15 @@ public:
 		"# Or exit the game with:"
 	};
 
+	enum HintKind
+	{
+		Default = 0,
+		
+		Locking,
+		Scoring,
+		None
+	};
+
 	struct DieData
 	{
 		uInt id;
@@ -66,11 +75,12 @@ public:
 	static void RenderPressEnterToThrow();
 	static void RenderRoundHeader(uInt roundIndex, uInt playerId);	
 	static void RenderTable(const DieDatas& dice, const ComboDatas& combos);
-	static void RenderCommands(const CommandDatas& commands, Tutorial tutorial = {});
+	static void RenderCommands(const CommandDatas& commands, const HintKind hint = Default);
 	static void RenderPressEnterToComplete();
 
 	static void Clear();
 	static void RenderInvalidInput();
+	static void RenderExitConfirmation();
 #pragma endregion
 
 
@@ -95,6 +105,8 @@ private:
 
 	inline static constexpr uInt MAX_COMMANDS_PER_LINE = 2U;
 	inline static constexpr uInt COMMAND_ENTRY_WIDTH = 30U;
+
+	static void RenderHint(const HintKind kind);
 
 
 	// Helpers for tabular rendering

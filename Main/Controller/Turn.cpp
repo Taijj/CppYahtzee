@@ -26,18 +26,16 @@ void Turn::Run()
 	{
 		case Turn::Initial: RunInitial(); break;
 		case Turn::Playing: RunPlaying(); break;
-		case Turn::Locking: RunLocking(); break;
-		
-		case Turn::Scoring:
-				RunScoring();
-				Complete();
-			break;
+		case Turn::Locking: RunLocking(); break;		
+		case Turn::Scoring: RunScoring(); break;
 	}
+
+	if(_phase == Completed)
+		Complete();
 }
 
 void Turn::Complete()
-{
-	_phase = Turn::Completed;
+{	
 	View::Clear();
 	View::RenderRoundHeader(_currentRound, _currentPlayerId);
 	RenderTable();
@@ -84,7 +82,7 @@ void Turn::RunLocking()
 {
 	View::RenderRoundHeader(_currentRound, _currentPlayerId);
 	RenderTable();
-	RenderCommands({ Input::THROW, Input::SCORE, Input::EXIT });
+	RenderCommands({ Input::THROW, Input::SCORE, Input::EXIT }, 1);
 
 	// Loop until valid input was made
 	std::vector<std::uint32_t> ids;
@@ -97,7 +95,7 @@ void Turn::RunLocking()
 		if (com != nullptr)
 		{
 			Execute(*com);
-			break;
+			return;
 		}
 		
 		// 1 or more dice were selected
@@ -127,7 +125,7 @@ void Turn::RunScoring()
 {	
 	View::RenderRoundHeader(_currentRound, _currentPlayerId);
 	RenderTable();
-	RenderCommands({ Input::EXIT });
+	RenderCommands({ Input::EXIT }, 2);
 
 	const auto& player = Model::GetPlayers().at(_currentPlayerId);
 		
@@ -141,7 +139,7 @@ void Turn::RunScoring()
 		if (com != nullptr)
 		{
 			Execute(*com);
-			break;
+			return;
 		}
 		
 		// A kind was selected that the player did not score, yet
@@ -155,8 +153,7 @@ void Turn::RunScoring()
 		}
 
 		View::RenderInvalidInput();
-	}
-		
+	}		
 
 	// Set Score
 	for(const auto& c : Model::COMBOS)
@@ -167,6 +164,9 @@ void Turn::RunScoring()
 		player->SetScore(kind, c->Score(_currentRoll));		
 		break;
 	}
+
+	// !
+	_phase = Turn::Completed;
 }
 #pragma endregion
 
@@ -198,18 +198,13 @@ void Turn::RenderTable() const
 	View::RenderTable(dice, combos);	
 }
 
-void Turn::RenderCommands(const std::vector<Command> availableCommands) const
+void Turn::RenderCommands(const std::vector<Command> availableCommands, std::uint32_t hintKind) const
 {
 	std::vector<View::CommandData> commands;
 	for (const Command& c : availableCommands)
 		commands.push_back({ c.character, c.description });
-
-	View::Tutorial tut = {};
-	if (_phase == Locking)
-		tut = View::LOCK_TUTORIAL;
-	else if (_phase == Scoring)
-		tut = View::SCORE_TUTORIAL;
-	View::RenderCommands(commands, tut);
+		
+	View::RenderCommands(commands, static_cast<View::HintKind>(hintKind));
 }
 #pragma endregion
 
@@ -256,7 +251,9 @@ void Turn::ThrowDice()
 
 void Turn::ExitGame()
 {
-	//_renderer.RenderExitConfirmation();	
+	View::Clear();
+	View::RenderExitConfirmation();
+	RenderCommands({ Input::YES, Input::NO }, 3);
 
 	const Command* com = nullptr;
 	while (com == nullptr)
