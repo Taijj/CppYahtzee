@@ -9,7 +9,7 @@ int main()
     
     View::Wake();
     Model::Wake(playerCount);
-    game.Run();
+    game.RunTurns();
 
     return 0;
 }

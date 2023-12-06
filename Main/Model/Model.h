@@ -13,7 +13,7 @@
 
 
 /// <summary>
-/// Model part of the MVC pattern. Holds and processes the game's data.
+/// Model part of the MVC pattern. Holds and organizes the game's data.
 /// </summary>
 class Model
 {	

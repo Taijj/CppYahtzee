@@ -157,7 +157,7 @@
     <ClCompile Include="Model\Die.cpp" />
     <ClCompile Include="Model\Player.cpp" />
     <ClCompile Include="View\SpritesLoader.cpp" />
-    <ClCompile Include="View\View.cpp" />
+    <ClCompile Include="View\ViewDefault.cpp" />
     <ClCompile Include="View\ViewTable.cpp" />
     <ClCompile Include="Yahtzee.cpp" />
   </ItemGroup>
@@ -166,7 +166,6 @@
     <ClInclude Include="Controller\Input.h" />
     <ClInclude Include="Controller\Turn.h" />
     <ClInclude Include="Global\ScoreKinds.h" />
-    <ClInclude Include="Global\Utils.h" />
     <ClInclude Include="Model\Combos.h" />
     <ClInclude Include="Model\Player.h" />
     <ClInclude Include="Global\Rules.h" />

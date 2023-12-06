@@ -18,7 +18,7 @@ std::uint32_t Game::ShowWelcome()
     return count;
 }
 
-void Game::Run()
+void Game::RunTurns()
 {    
     _isExited = false;
     _currentRound = 0;

@@ -8,8 +8,6 @@
 #include "../Global/Rules.h"
 #include "../Global/ScoreKinds.h"
 
-
-
 /// <summary>
 /// Base class for all achieveable Combos in the game.
 /// 

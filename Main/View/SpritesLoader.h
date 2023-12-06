@@ -11,8 +11,8 @@
 
 /// <summary>
 /// Helper class that loads a graphical representation of the game dice
-/// from a file. The Sprites are parsed and processed for easy later
-/// output on the console.
+/// from a file. The Sprites are parsed and processed for easy outputting
+/// in the console later.
 /// </summary>
 class SpritesLoader
 {

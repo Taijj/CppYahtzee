@@ -6,6 +6,9 @@
 #include "../Global/Rules.h"
 #include "Input.h"
 
+/// <summary>
+/// Handles all phases for one player's turn.
+/// </summary>
 class Turn
 {
 
@@ -51,6 +54,7 @@ private:
 	std::array<std::uint32_t, Rules::DIE_COUNT> _currentRoll;
 	
 	void Complete();
+
 	void RunInitial();
 	void RunPlaying();
 	void RunLocking();

@@ -21,7 +21,7 @@
     <ClCompile Include="Model\Die.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="View\View.cpp">
+    <ClCompile Include="View\ViewDefault.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Model\Model.cpp">
@@ -78,9 +78,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="View\SpritesLoader.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Global\Utils.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

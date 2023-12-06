@@ -5,7 +5,7 @@
 #include "../Global/ScoreKinds.h"
 
 /// <summary>
-/// Representation of one player playing the game.
+/// Representation of one of the game's players.
 /// </summary>
 class Player
 {

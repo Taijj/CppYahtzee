@@ -6,7 +6,8 @@
 #include "Turn.h"
 
 /// <summary>
-/// Organizes the flow of the game in rounds.
+/// Organizes the flow of a whole game including intro/outro
+/// and all of the game's turns for each player.
 /// </summary>
 class Game
 {
@@ -28,9 +29,9 @@ public:
     std::uint32_t ShowWelcome();
 
     /// <summary>
-    /// Run the game loop.
+    /// Loops over all turns for each player.
     /// </summary>
-    void Run();    
+    void RunTurns();    
     
 
 private:
