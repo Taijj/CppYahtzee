@@ -58,16 +58,24 @@ void View::RenderLabelCell(uInt row)
 
 void View::RenderComboCell(uInt row)
 {
+	ComboData data = _combos[row];
+
 	std::cout << INDENT
 		<< std::setw(TABLE_COMBO_NAME_WIDTH) << std::right
-		<< _combos[row].name << ": "
+		<< data.name << ": "
 		<< std::setw(TABLE_COMBO_SCORE_WIDTH) << std::right;
 
-	std::int32_t score = _combos[row].score;
-	if (score >= 0)
-		std::cout << score;
+	std::int32_t score = data.score;
+	if (score < 0)
+	{
+		std::cout << EMPTY
+			<< INDENT
+			<< '(' << data.command << ')';
+	}
 	else
-		std::cout << EMPTY;
+	{
+		std::cout << score;
+	}	
 }
 
 void View::RenderDieCell(uInt row, uInt column)

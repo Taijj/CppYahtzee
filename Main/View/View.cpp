@@ -37,11 +37,21 @@ void View::RenderRoundHeader(std::uint32_t roundIndex, std::uint32_t playerId)
 
 
 
-void View::RenderInitialPhase()
+void View::RenderPressEnterToThrow()
 {
 	std::cout
 		<< INDENT
-		<< "# Press any key to throw the dice!";
+		<< "# Press Enter to throw the dice!\n"
+		<< INDENT;
+	std::cout.flush();
+}
+
+void View::RenderPressEnterToComplete()
+{
+	std::cout
+		<< INDENT
+		<< "# Press Enter to continue!\n"
+		<< INDENT;
 	std::cout.flush();
 }
 
@@ -61,11 +71,25 @@ void View::Clear()
 
 
 void View::RenderCommands(const CommandDatas& commands, Tutorial tutorial)
-{
-	// Headline
-	std::cout
-		<< INDENT
-		<< "# Use the following commands to continue:\n\n";
+{	
+	if (tutorial.size() != 0) // Tutorial Headline
+	{
+		for (const auto& l : tutorial)
+		{
+			std::cout
+				<< INDENT
+				<< l
+				<< '\n';
+		}
+		std::cout << '\n';
+	}
+	else // Default Headline
+	{
+		std::cout
+			<< INDENT
+			<< DEFAULT_COMMAND_HEADLINE
+			<< "\n\n";
+	}
 
 	// Commands
 	uInt count = 0;
@@ -83,20 +107,10 @@ void View::RenderCommands(const CommandDatas& commands, Tutorial tutorial)
 			count = 0;
 			std::cout << '\n';
 		}
-	}	
-
-	// Tutorial
-	if (tutorial.size() != 0)
-	{
-		std::cout << "\n\n";
-		for (const auto& l : tutorial)
-		{
-			std::cout
-				<< INDENT
-				<< l
-				<< '\n';
-		}
 	}
+
+	if (commands.size() % 2 == 1)
+		std::cout << '\n';
 
 	// Input field
 	std::cout << '\n'

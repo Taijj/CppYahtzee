@@ -122,12 +122,20 @@ const Command* Input::ForConfirmation()
 	return nullptr;	
 }
 
-void Input::WaitForAnyKey()
-{	
-	char c;
-	std::cin.clear(); // clear any potential error flags
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
-	std::cin.get(c); // wait for any input
+void Input::WaitForEnter()
+{		
+	std::cin.clear();
+		
+	// If the input stream is empty, the call to cin.ignore() will block.
+	// Guarding against this prevents the need to press "Enter" twice in
+	// the beginning of consecutive rounds.
+	bool isNotEmpty = std::cin.rdbuf()->in_avail() != 0;
+	if(isNotEmpty)
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+	// Wait for "Enter"
+	char _;
+	std::cin.get(_);
 }
 
 

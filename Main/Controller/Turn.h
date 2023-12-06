@@ -50,6 +50,7 @@ private:
 
 	std::array<std::uint32_t, Rules::DIE_COUNT> _currentRoll;
 	
+	void Complete();
 	void RunInitial();
 	void RunPlaying();
 	void RunLocking();

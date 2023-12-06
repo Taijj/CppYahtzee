@@ -60,7 +60,7 @@ public:
 	static const Command* ForScoring(Score::Kind& scoreKind);
 	static const Command* ForConfirmation();
 
-	static void WaitForAnyKey();	
+	static void WaitForEnter();	
 
 	inline static const bool isAutomatic = false;
 

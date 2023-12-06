@@ -17,18 +17,19 @@ public:
 	using string = std::string;
 	using Tutorial = std::vector<std::string>;
 
+	inline static const string DEFAULT_COMMAND_HEADLINE =
+		"# Enter one of the following commands to play:";
+
 	inline static const auto LOCK_TUTORIAL = Tutorial{
-		"# LOCKING: Select one or multiple dice by typing in one or more numbers from 1-5.",
-		"# Example: '125' will select the dice 1, 2, and 5."
+		"# LOCKING: Select one or multiple dice by entering one or more numbers from 1-5.",
+		"# Example: '125' will select the dice 1, 2, and 5.\n",
+		"# Or continue by entering one of the following commands:"
 	};
 
 	inline static const auto SCORE_TUTORIAL = Tutorial{
-		"# When scoring, select how you want to score by adding one of the following after the command:",
-		"1 - Aces\t\t 2 - Twos\t\t 3 - Threes\t",
-		"4 - Fours\t\t 5 - Fives\t\t 6 - Sixes\t",
-		"3k - 3 of a Kind\t 4k - 4 of a Kind\t fh - Full House\t",
-		"ss - Small Straight\t sl - Large Straight\t y - Yahtzee\t",
-		"c - Chance"
+		"# Select how you want to score by entering a combo's command.",
+		"# (See: List above)\n",
+		"# Or exit the game with:"
 	};
 
 	struct DieData
@@ -41,6 +42,7 @@ public:
 	struct ComboData
 	{
 		string name;
+		string command;
 		std::int32_t score;
 	};
 
@@ -61,10 +63,11 @@ public:
 	static void Wake();
 
 	static void RenderWelcome();
-	static void RenderInitialPhase();
+	static void RenderPressEnterToThrow();
 	static void RenderRoundHeader(uInt roundIndex, uInt playerId);	
 	static void RenderTable(const DieDatas& dice, const ComboDatas& combos);
 	static void RenderCommands(const CommandDatas& commands, Tutorial tutorial = {});
+	static void RenderPressEnterToComplete();
 
 	static void Clear();
 	static void RenderInvalidInput();

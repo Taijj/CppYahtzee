@@ -64,7 +64,7 @@ void Player::SumUp(const Score::Kind from, const Score::Kind to)
 
 		_totalScore += hasScore ? score : 0;
 		_potentialScore = !hasScore
-			? Model::COMBOS.at(i)->MaxPossibleScore()
+			? Model::COMBOS.at(i-1)->MaxPossibleScore()
 			: score;
 	}
 }

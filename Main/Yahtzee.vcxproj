@@ -166,6 +166,7 @@
     <ClInclude Include="Controller\Input.h" />
     <ClInclude Include="Controller\Turn.h" />
     <ClInclude Include="Global\ScoreKinds.h" />
+    <ClInclude Include="Global\Utils.h" />
     <ClInclude Include="Model\Combos.h" />
     <ClInclude Include="Model\Player.h" />
     <ClInclude Include="Global\Rules.h" />

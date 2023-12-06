@@ -27,8 +27,24 @@ void Turn::Run()
 		case Turn::Initial: RunInitial(); break;
 		case Turn::Playing: RunPlaying(); break;
 		case Turn::Locking: RunLocking(); break;
-		case Turn::Scoring: RunScoring(); break;
+		
+		case Turn::Scoring:
+				RunScoring();
+				Complete();
+			break;
 	}
+}
+
+void Turn::Complete()
+{
+	_phase = Turn::Completed;
+	View::Clear();
+	View::RenderRoundHeader(_currentRound, _currentPlayerId);
+	RenderTable();
+	View::RenderPressEnterToComplete();
+
+	if (false == Input::isAutomatic)
+		Input::WaitForEnter();
 }
 
 bool Turn::IsRunning() { return _phase != Completed && _phase != Canceled; }
@@ -41,9 +57,9 @@ bool Turn::WasCanceled() { return _phase == Canceled; }
 void Turn::RunInitial()
 {
 	View::RenderRoundHeader(_currentRound, _currentPlayerId);
-	View::RenderInitialPhase();
+	View::RenderPressEnterToThrow();
 
-	Input::WaitForAnyKey();	
+	Input::WaitForEnter();	
 	ThrowDice();
 }
 
@@ -111,12 +127,13 @@ void Turn::RunScoring()
 {	
 	View::RenderRoundHeader(_currentRound, _currentPlayerId);
 	RenderTable();
-	RenderCommands({ Input::THROW, Input::SCORE, Input::EXIT });
+	RenderCommands({ Input::EXIT });
 
 	const auto& player = Model::GetPlayers().at(_currentPlayerId);
 		
+	// Until a valid input was made
 	Score::Kind kind;
-	while (true) // Until a valid input was made
+	while (true)
 	{
 		const Command* com = Input::ForScoring(kind);
 		
@@ -137,11 +154,11 @@ void Turn::RunScoring()
 			// TODO: Warnings
 		}
 
-		// TODO: Invalid
+		View::RenderInvalidInput();
 	}
 		
 
-
+	// Set Score
 	for(const auto& c : Model::COMBOS)
 	{
 		if (c->Kind() != kind)
@@ -150,14 +167,6 @@ void Turn::RunScoring()
 		player->SetScore(kind, c->Score(_currentRoll));		
 		break;
 	}
-
-	_phase = Turn::Completed;
-	//_renderer.UpdatePlayer(*_player);
-	//_renderer.RenderRound();
-	//_renderer.RenderTable();
-	
-	if(false == Input::isAutomatic)
-		Input::WaitForAnyKey();
 }
 #pragma endregion
 
@@ -177,10 +186,13 @@ void Turn::RenderTable() const
 	for (const auto& c : Model::COMBOS)
 	{
 		const auto& player = Model::GetPlayers().at(_currentPlayerId);
+		
 		std::int32_t score;
 		player->TryGetScore(c->Kind(), score);
 
-		combos.push_back({ c->Name(), score });
+		std::string command = Input::SCORE_COMMANDS.at(c->Kind()-1).first;
+
+		combos.push_back({ c->Name(), command, score });
 	}
 
 	View::RenderTable(dice, combos);	
@@ -240,9 +252,6 @@ void Turn::ThrowDice()
 	
 	--_rerollsLeft;
 	_phase = _rerollsLeft > 0 ? Turn::Playing : Turn::Scoring;
-
-	//_renderer.UpdateRerollsLeft(_rerollsLeft);
-	//_renderer.UpdatePlayer(*_player);
 }
 
 void Turn::ExitGame()
