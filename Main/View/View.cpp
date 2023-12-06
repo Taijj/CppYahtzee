@@ -13,6 +13,13 @@ void View::Wake()
 }
 
 
+void View::RenderCell(uInt width, string message)
+{
+	std::cout << std::setw(width)
+		<< std::left
+		<< message;
+}
+
 
 void View::RenderWelcome()
 {
@@ -23,6 +30,16 @@ void View::RenderWelcome()
 		<< '\n'
 		<< INDENT << YOUR_INPUT;
 	std::cout.flush();
+}
+
+void View::RenderGoodBye()
+{
+	std::cout << "\n"
+		<< INDENT
+		<< "Thanks for playing!\n\n"
+		<< INDENT
+		<< "Press Enter to finish..."
+		<< std::endl;
 }
 
 void View::RenderRoundHeader(std::uint32_t roundIndex, std::uint32_t playerId)
@@ -134,4 +151,75 @@ void View::RenderHint(const HintKind kind)
 			<< '\n';
 	}
 	std::cout << '\n';
+}
+
+
+
+void View::RenderScoreBoard(const std::vector<Player>& players)
+{
+	std::cout << "\n"
+		<< "\t\t\t--- The Game is over! ---\n"
+		<< "\n\n";
+	
+	// 13 for each achievable Combo
+	// 2 Extra for a column label
+	// 2 Extra for a total score at the bottom
+	std::uint32_t rows = 2 + 13 + 2;
+	const std::uint32_t totalScoreGapRow = 15;
+	for (std::uint32_t row = 0; row < rows; ++row)
+	{
+		bool isGap = row == 1 || row == totalScoreGapRow;
+		if (isGap)
+		{
+			std::cout << '\n';
+			continue;
+		}
+
+		std::cout << INDENT;
+		for (std::uint32_t i = 0; i < players.size(); i++)
+		{
+			if (row == 0)
+			{
+				RenderCell(SCORE_BOARD_COLUMN_WIDTH, std::format("# Player {}:", i+1));			
+				continue;
+			}
+
+			if (row > totalScoreGapRow)
+			{
+				RenderCell(SCORE_BOARD_COLUMN_WIDTH, std::format("Total: {}", players[i].totalScore));
+				continue;
+			}
+
+			ComboData data = players[i].combos[row-2];
+			RenderCell(SCORE_BOARD_COMBO_NAME_WIDTH, std::format("{}:", data.name));
+			RenderCell(SCORE_BOARD_COMBO_SCORE_WIDTH, std::to_string(data.score));
+		}
+		std::cout << '\n';
+	}
+	std::cout << "\n";
+
+
+
+	string text = "";
+	if (players.size() == 1)
+	{
+		text = players[0].totalScore >= Rules::SINGLE_PLAYER_WIN_SCORE
+			? std::format("# Congratulations! You got more than {} points! You won!\n", Rules::SINGLE_PLAYER_WIN_SCORE)
+			: std::format("# Oh no! You need at least {} points! You lost!\n", Rules::SINGLE_PLAYER_WIN_SCORE);
+	}
+	else
+	{		
+		for (std::uint32_t i = 0; i < players.size(); ++i)
+		{
+			if (false == players[i].isWinner)
+				continue;
+
+			text = std::format("# Player {} has won the game!\n", i+1);
+			break;			
+		}
+	}	
+
+	std::cout << INDENT
+		<< text
+		<< std::endl;
 }

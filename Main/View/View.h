@@ -41,6 +41,8 @@ public:
 		None
 	};
 
+
+
 	struct DieData
 	{
 		uInt id;
@@ -55,25 +57,30 @@ public:
 		std::int32_t score;
 	};
 
-	struct Table
-	{
-		std::vector<DieData> dice;
-		std::vector<ComboData> combos;
-
-		uInt totalScore;
-		uInt bonus;
-	};
-
-
-
 	struct CommandData
 	{
 		char character;
 		string description;
 	};
-		
+
 	using CommandDatas = std::vector<CommandData>;
-	
+
+
+
+	struct Player
+	{
+		std::vector<ComboData> combos;
+		uInt totalScore;
+		uInt bonus;
+
+		bool isWinner;
+	};
+
+	struct Table
+	{
+		std::vector<DieData> dice;		
+		Player player;
+	};
 #pragma endregion
 
 
@@ -83,11 +90,15 @@ public:
 	static void Wake();
 
 	static void RenderWelcome();
+
 	static void RenderPressEnterToThrow();
 	static void RenderRoundHeader(uInt roundIndex, uInt playerId);	
 	static void RenderTable(const Table& table);
 	static void RenderCommands(const CommandDatas& commands, const HintKind hint = Default);
 	static void RenderPressEnterToComplete();
+	
+	static void RenderScoreBoard(const std::vector<Player>& players);
+	static void RenderGoodBye();
 
 	static void Clear();
 	static void RenderInvalidInput();
@@ -125,6 +136,10 @@ private:
 	inline static constexpr uInt TABLE_COMBO_SCORE_WIDTH = 4U;
 	inline static constexpr uInt TABLE_DIE_WIDTH = 7U;	
 	inline static constexpr uInt TABLE_SCORE_WIDTH = 10U;
+
+	inline static constexpr uInt SCORE_BOARD_COLUMN_WIDTH = 20U;
+	inline static constexpr uInt SCORE_BOARD_COMBO_NAME_WIDTH = 14U;
+	inline static constexpr uInt SCORE_BOARD_COMBO_SCORE_WIDTH = 6U;
 
 	static void RenderLabelCell(uInt row);
 	static void RenderComboCell(uInt row);

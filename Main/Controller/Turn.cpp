@@ -129,6 +129,22 @@ void Turn::RunScoring()
 
 	const auto& player = Model::GetPlayers().at(_currentPlayerId);
 		
+	// Automatic skip
+	if (Input::isAutomatic)
+	{
+		for (const auto& c : Model::COMBOS)
+		{
+			std::int32_t _;
+			if (player->TryGetScore(c->Kind(), _))
+				continue;
+
+			player->SetScore(c->Kind(), c->Score(_currentRoll));
+		}
+
+		_phase = Turn::Completed;
+		return;
+	}
+
 	// Until a valid input was made
 	Score::Kind kind;
 	while (true)
@@ -164,8 +180,7 @@ void Turn::RunScoring()
 		player->SetScore(kind, c->Score(_currentRoll));		
 		break;
 	}
-
-	// !
+	
 	_phase = Turn::Completed;
 }
 #pragma endregion
@@ -195,11 +210,14 @@ void Turn::RenderTable() const
 		combos.push_back({ c->Name(), command, score });
 	}
 
-	View::RenderTable({
+	View::RenderTable(View::Table {
 		dice,
-		combos,
-		player->TotalScore(),
-		player->HasBonus() ? Rules::BONUS_SCORE : 0
+		View::Player {
+			combos,
+			player->TotalScore(),
+			player->HasBonus() ? Rules::BONUS_SCORE : 0,
+			false
+		}
 	});
 }
 

@@ -62,7 +62,7 @@ public:
 
 	static void WaitForEnter();	
 
-	inline static const bool isAutomatic = false;
+	inline static const bool isAutomatic = true;
 
 private:
 

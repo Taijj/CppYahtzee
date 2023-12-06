@@ -1,8 +1,24 @@
 #include "Game.h"
 
 #include "../Global/Rules.h"
+#include "../View/View.h"
 
-Game::ExitCode Game::Run()
+std::uint32_t Game::ShowWelcome()
+{    
+    View::RenderWelcome();
+
+    std::uint32_t count = 0;
+    while (count == 0)
+    {
+        count = Input::ForPlayerCount();
+
+        if (count == 0)
+            View::RenderInvalidInput();
+    }
+    return count;
+}
+
+void Game::Run()
 {    
     _isExited = false;
     _currentRound = 0;
@@ -15,7 +31,7 @@ Game::ExitCode Game::Run()
             RunTurn();                       
 
             if (_turn->WasCanceled())
-                return Canceled;
+                return;
 
             if (IsRoundCutShort())
                 break;
@@ -23,8 +39,8 @@ Game::ExitCode Game::Run()
 
         ++_currentRound;
     }
-
-    return Completed;
+    
+    ShowScoreBoard();
 }
 
 void Game::RunTurn()
@@ -53,4 +69,38 @@ bool Game::IsRoundCutShort()
     }
 
     return true;
+}
+
+void Game::ShowScoreBoard()
+{
+    const auto& players = Model::GetPlayers();
+    const auto& winner = Model::GetCurrentLeader();
+    
+    std::vector<View::Player> viewPlayers;
+    for (const auto& player : players)
+    {
+        std::vector<View::ComboData> combos;
+        for (const auto& c : Model::COMBOS)
+        {
+            std::int32_t score;
+            player->TryGetScore(c->Kind(), score);
+
+            std::string command = Input::SCORE_COMMANDS.at(c->Kind() - 1).first;
+
+            combos.push_back({ c->Name(), command, score });
+        }
+
+        viewPlayers.push_back({
+                combos,
+                player->TotalScore(),
+                player->HasBonus() ? Rules::BONUS_SCORE : 0,
+                player->Id() == winner.Id()
+            });
+    }
+
+    View::Clear();
+    View::RenderScoreBoard(viewPlayers);
+
+    View::RenderGoodBye();
+    Input::WaitForEnter();
 }

@@ -44,6 +44,10 @@ public:
 	/// </summary>
 	static Players& GetPlayers();
 
+	/// <summary>
+	/// Returns a reference to the player with the current highest score.
+	/// </summary>
+	static Player& GetCurrentLeader();
 
 
 	/// <summary>

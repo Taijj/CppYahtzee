@@ -30,7 +30,7 @@ const std::uint32_t Input::ForPlayerCount()
 const Command* Input::ForGame()
 {
 	if (isAutomatic)
-		return &THROW;
+		return &SCORE;
 
 	std::string input;
 	std::cin >> input;
@@ -121,7 +121,10 @@ const Command* Input::ForConfirmation()
 }
 
 void Input::WaitForEnter()
-{		
+{
+	if (isAutomatic)
+		return;
+
 	std::cin.clear();
 		
 	// If the input stream is empty, the call to cin.ignore() will block.

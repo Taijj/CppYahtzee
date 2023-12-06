@@ -15,6 +15,7 @@ void View::RenderTable(const Table& table)
 	// score and more.
 	// 
 	// The table has 8 Columns (0:Labels - 1-5:Dice - 6:Combos - 7:Score & Bonus) and
+	// The table has 8 Columns (0:Labels - 1-5:Dice - 6:Combos - 7:Score & Bonus) and
 	// 13 Rows (1 for each Combo, the remaining data centered in the vertical middle)
 	for (std::uint32_t row = 0; row < 13; ++row)
 	{
@@ -62,7 +63,7 @@ void View::RenderLabelCell(uInt row)
 
 void View::RenderComboCell(uInt row)
 {
-	ComboData data = _table.combos[row];
+	ComboData data = _table.player.combos[row];
 
 	std::cout << INDENT
 		<< std::setw(TABLE_COMBO_NAME_WIDTH) << std::right
@@ -113,19 +114,17 @@ void View::RenderScoreCell(uInt row)
 {
 	if (row == 0)
 	{
+		uInt score = _table.player.totalScore;
 		RenderCell(TABLE_SCORE_WIDTH,
-			std::format("{}Total: {}", INDENT, _table.totalScore));
+			std::format("{}Total: {}", INDENT, _table.player.totalScore));
 	}
-	else if (row == 2 && _table.bonus > 0)
+	else if (row == 2)
 	{
-		RenderCell(TABLE_SCORE_WIDTH,
-			std::format("{}Bonus: {}", INDENT, _table.bonus));
-	}
-}
+		uInt bonus = _table.player.bonus;
+		if (bonus < 0)
+			return;
 
-void View::RenderCell(uInt width, string message)
-{
-	std::cout << std::setw(width)
-		<< std::left
-		<< message;
+		RenderCell(TABLE_SCORE_WIDTH,
+			std::format("{}Bonus: {}", INDENT, bonus));
+	}
 }

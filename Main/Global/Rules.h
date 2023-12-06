@@ -16,6 +16,7 @@ namespace Rules
 
 	constexpr std::uint32_t BONUS_THRESHOLD = 63;
 	constexpr std::uint32_t BONUS_SCORE = 35;
+	constexpr std::uint32_t SINGLE_PLAYER_WIN_SCORE = 165;
 
 	constexpr std::int32_t UNDEFINED = -1;
 };
